@@ -12,12 +12,13 @@ public class Player : MonoBehaviour
     private float _horizontalInput;
 
     private Rigidbody _rigidbody;
+    private Animator _animator;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -30,6 +31,8 @@ public class Player : MonoBehaviour
             _spaceKeyPressed = false;
 
         _horizontalInput = Input.GetAxis("Horizontal");
+        
+        
     }
 
     private void FixedUpdate()
@@ -38,6 +41,20 @@ public class Player : MonoBehaviour
         {
             _rigidbody.AddForce(Vector3.up * 5, ForceMode.VelocityChange);
         }
+
+        if (Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
+        {
+            _animator.SetBool("jump", false);
+        }
+        
+        if (_horizontalInput != 0)
+            _animator.SetBool("walk", true);
+        else
+            _animator.SetBool("walk", false);
+        
+        if (_spaceKeyPressed)
+            _animator.SetBool("jump", true);
+        
         
         _rigidbody.velocity = new Vector3(_horizontalInput * 2, _rigidbody.velocity.y, 0);
     }

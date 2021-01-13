@@ -8,11 +8,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform _groundCheck = null;
     [SerializeField] private LayerMask _playerMask;
     private bool _spaceKeyPressed;
+    private bool _fKeyPressed;
 
     private float _horizontalInput;
 
     private Rigidbody _rigidbody;
     private Animator _animator;
+    private bool _lookRight;
+    private Rigidbody _cameraRigidBody;
     
 
     // Start is called before the first frame update
@@ -27,16 +30,41 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
             _spaceKeyPressed = true;
-        else
+        else if (Input.GetKeyDown(KeyCode.F))
+        {
             _spaceKeyPressed = false;
-
+            _fKeyPressed = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.F))
+        {
+            _fKeyPressed = false;
+            _spaceKeyPressed = false;
+        }
+        else
+        {
+            _spaceKeyPressed = false;
+        }
+        
+        
         _horizontalInput = Input.GetAxis("Horizontal");
         
+        if (_horizontalInput < 0)
+        {
+            if (!_lookRight)
+            {
+                transform.Rotate(Vector3.up, 180.0f);
+                _lookRight = true;
+            }
+        }
+        else if (_horizontalInput > 0)
+        {
+            if (_lookRight)
+            {
+                transform.Rotate(Vector3.up, 180.0f);
+                _lookRight = false;
+            }
+        }
         
-    }
-
-    private void FixedUpdate()
-    {
         if (_spaceKeyPressed && Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
         {
             _rigidbody.AddForce(Vector3.up * 5, ForceMode.VelocityChange);
@@ -48,15 +76,27 @@ public class Player : MonoBehaviour
         }
         
         if (_horizontalInput != 0)
+        {
             _animator.SetBool("walk", true);
+        }
         else
             _animator.SetBool("walk", false);
         
         if (_spaceKeyPressed)
             _animator.SetBool("jump", true);
         
+        if (_fKeyPressed)
+            _animator.SetBool("shot", true);
+        else
+            _animator.SetBool("shot", false);
+    }
+
+    private void FixedUpdate()
+    {
         
-        _rigidbody.velocity = new Vector3(_horizontalInput * 2, _rigidbody.velocity.y, 0);
+        
+        
+        _rigidbody.velocity = new Vector3(_horizontalInput *1, _rigidbody.velocity.y, 0);
     }
 
     private void OnTriggerEnter(Collider other)

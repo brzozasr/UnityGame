@@ -23,9 +23,29 @@ namespace DefaultNamespace
 
             if (_bullet != null)
             {
+                float destPos;
+                
+                if (transform.position.x > playerTransform.position.x)
+                {
+                    destPos = playerTransform.position.x - 150;
+                }
+                else if (transform.position.x < playerTransform.position.x)
+                {
+                    destPos = playerTransform.position.x + 150;
+                }
+                else
+                {
+                    destPos = playerTransform.position.x;
+                }
+                
                 _bullet.transform.position = Vector3.MoveTowards(_bullet.transform.position,
-                    new Vector3(playerTransform.position.x, transform.position.y, transform.position.z), 
+                    new Vector3(destPos, transform.position.y, transform.position.z), 
                     bulletSpeed * Time.deltaTime);
+
+                if (Math.Abs(_bullet.transform.position.x - destPos) < 25)
+                {
+                    Destroy(_bullet);
+                }
             }
         }
 

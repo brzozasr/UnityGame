@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask _playerMask;
     private bool _spaceKeyPressed;
     private bool _fKeyPressed;
+    private bool _rKeyPressed = false;
 
     private float _horizontalInput;
 
@@ -16,7 +17,9 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private bool _lookRight;
     private Rigidbody _cameraRigidBody;
-    
+    [SerializeField] private int WalkSpeed;
+    [SerializeField] private int RunSpeed;
+    private int MoveSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -44,25 +47,25 @@ public class Player : MonoBehaviour
         {
             _spaceKeyPressed = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+            if (_rKeyPressed == false)
+                _rKeyPressed = true;
+            else
+                _rKeyPressed = false;
         
         
         _horizontalInput = Input.GetAxis("Horizontal");
         
-        if (_horizontalInput < 0)
+        if (_horizontalInput < 0 && !_lookRight)
         {
-            if (!_lookRight)
-            {
-                transform.Rotate(Vector3.up, 180.0f);
-                _lookRight = true;
-            }
+            transform.Rotate(Vector3.up, 180.0f);
+            _lookRight = true;
         }
-        else if (_horizontalInput > 0)
+        else if (_horizontalInput > 0 && _lookRight)
         {
-            if (_lookRight)
-            {
-                transform.Rotate(Vector3.up, 180.0f);
-                _lookRight = false;
-            }
+            transform.Rotate(Vector3.up, 180.0f);
+            _lookRight = false;
         }
         
         if (_spaceKeyPressed && Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
@@ -77,11 +80,23 @@ public class Player : MonoBehaviour
         
         if (_horizontalInput != 0)
         {
-            _animator.SetBool("walk", true);
+            if (_rKeyPressed == false)
+            {
+                _animator.SetBool("walk", true);
+                MoveSpeed = WalkSpeed;
+            }
+            else
+            {
+                _animator.SetBool("run", true);
+                MoveSpeed = RunSpeed;
+            }
         }
         else
-            _animator.SetBool("walk", false);
-        
+            if (_rKeyPressed == false)
+                _animator.SetBool("walk", false);
+            else
+                _animator.SetBool("run", false);
+
         if (_spaceKeyPressed)
             _animator.SetBool("jump", true);
         
@@ -93,10 +108,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
-        
-        
-        _rigidbody.velocity = new Vector3(_horizontalInput *1, _rigidbody.velocity.y, 0);
+        _rigidbody.velocity = new Vector3(_horizontalInput * MoveSpeed, _rigidbody.velocity.y, 0);
     }
 
     private void OnTriggerEnter(Collider other)

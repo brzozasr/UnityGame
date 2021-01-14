@@ -10,12 +10,7 @@ namespace DefaultNamespace
         private readonly float _bulletSpeed = DroneController.Instance.bulletSpeed;
         private Transform _playerTransform;
         private float _destinationPosition;
-
-        private void Start()
-        {
-            
-        }
-
+        
         private void Awake()
         {
 

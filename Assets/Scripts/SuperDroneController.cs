@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class SuperDroneController : MonoBehaviour
+    public class SuperDroneController : DroneController
     {
         public GameObject droneBullet;
         public float bulletSpeed;

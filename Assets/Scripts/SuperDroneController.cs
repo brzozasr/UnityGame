@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
 {
@@ -15,6 +16,8 @@ namespace DefaultNamespace
         private float _posZ;
         private bool _isCall = false;
         private bool _isMoveUp = true;
+        private int _frame;
+        private int _iterator = 0;
 
         private void Start()
         {
@@ -25,35 +28,45 @@ namespace DefaultNamespace
                 _posX = pos.x;
                 _posY = pos.y;
                 _posZ = pos.z;
+
+                _frame = Random.Range(0, 31);
             }
         }
 
         private void Update()
         {
-            transform.Rotate(Vector3.up, 180.0f * Time.deltaTime);
-            var pos = transform.position;
-            
-            if (pos.y < _posY + maxMoveY && _isMoveUp)
+            if (_iterator >= _frame)
             {
-                transform.position = Vector3.MoveTowards(transform.position,
-                    new Vector3(pos.x, _posY + maxMoveY, pos.z), 
-                    moveSpeed * Time.deltaTime);
-                if (Math.Abs(pos.y - (_posY + maxMoveY)) < 0.1f)
+                transform.Rotate(Vector3.up, 180.0f * Time.deltaTime);
+                var pos = transform.position;
+
+                if (pos.y < _posY + maxMoveY && _isMoveUp)
                 {
-                    _isMoveUp = false;
+                    transform.position = Vector3.MoveTowards(transform.position,
+                        new Vector3(pos.x, _posY + maxMoveY, pos.z),
+                        moveSpeed * Time.deltaTime);
+                    if (Math.Abs(pos.y - (_posY + maxMoveY)) < 0.1f)
+                    {
+                        _isMoveUp = false;
+                    }
+                }
+                else
+                {
+                    transform.position = Vector3.MoveTowards(transform.position,
+                        new Vector3(_posX, _posY, _posZ),
+                        moveSpeed * Time.deltaTime);
+                    if (Math.Abs(_posY - pos.y) < 0.1f)
+                    {
+                        _isMoveUp = true;
+                    }
                 }
             }
-            else
+
+            // Number of frames delay
+            if (_frame >= _iterator)
             {
-                transform.position = Vector3.MoveTowards(transform.position,
-                    new Vector3(_posX, _posY, _posZ), 
-                    moveSpeed * Time.deltaTime);
-                if (Math.Abs(_posY - pos.y) < 0.1f)
-                {
-                    _isMoveUp = true;
-                }
+                _iterator++;
             }
-            
         }
     }
 }

@@ -18,11 +18,11 @@ namespace DefaultNamespace
                 
             if (transform.position.x > _playerTransform.position.x)
             {
-                _destinationPosition = _playerTransform.position.x - 100;
+                _destinationPosition = _playerTransform.position.x - 60;
             }
             else if (transform.position.x < _playerTransform.position.x)
             {
-                _destinationPosition = _playerTransform.position.x + 100;
+                _destinationPosition = _playerTransform.position.x + 60;
             }
             else
             {
@@ -56,8 +56,11 @@ namespace DefaultNamespace
 
         private void OnCollisionEnter(Collision other)
         {
-            Instantiate(explosion, transform.position, transform.rotation);
-            Destroy(gameObject);
+            if (!other.gameObject.CompareTag("Enemy"))
+            {
+                Instantiate(explosion, transform.position, transform.rotation);
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -1340,12 +1340,12 @@ PrefabInstance:
     - target: {fileID: 4801664383691231192, guid: f7349d75432a747679529869c1835d27,
         type: 3}
       propertyPath: shootTimeRangeTo
-      value: 1.1
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4801664383691231192, guid: f7349d75432a747679529869c1835d27,
         type: 3}
       propertyPath: shootTimeRangeFrom
-      value: 1
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7349d75432a747679529869c1835d27, type: 3}

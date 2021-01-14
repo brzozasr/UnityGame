@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8018186402009176224}
   - component: {fileID: 6021332980572307934}
   - component: {fileID: 6363785608478735417}
-  - component: {fileID: 110915659927253674}
+  - component: {fileID: -3480384944592441004}
   m_Layer: 0
   m_Name: Drone Bullet
   m_TagString: DgoneBullet
@@ -94,7 +94,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &110915659927253674
+--- !u!114 &-3480384944592441004
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,5 +106,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8adb1ee4bc2e4344b88bdb504705ec1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 0}
+  explosion: {fileID: 1000013462590818, guid: 4e971cf9b3a7042e49aa5ca5ad59fa9d, type: 3}
   bulletSpeed: 4

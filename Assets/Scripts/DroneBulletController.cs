@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class DronBulletController : MonoBehaviour
+    public class DroneBulletController : MonoBehaviour
     {
+        public GameObject explosion;
         public float bulletSpeed;
         
         private Transform _playerTransform;
@@ -55,6 +56,7 @@ namespace DefaultNamespace
 
         private void OnCollisionEnter(Collision other)
         {
+            Instantiate(explosion, transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }

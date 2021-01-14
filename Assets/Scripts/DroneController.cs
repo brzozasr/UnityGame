@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Random = System.Random;
+using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
 {
@@ -10,6 +10,8 @@ namespace DefaultNamespace
         public GameObject droneBullet;
         public Transform playerTransform;
         public float bulletSpeed;
+        public float shootTimeRangeFrom;
+        public float shootTimeRangeTo;
 
         private GameObject _bullet;
         private void Awake()
@@ -51,11 +53,9 @@ namespace DefaultNamespace
 
         IEnumerator Shooting()
         {
-            Random random = new Random();
-
             while (true)
             {
-                float seconds = random.Next(8, 18);
+                float seconds = Random.Range(shootTimeRangeFrom, shootTimeRangeTo);
                 yield return new WaitForSeconds(seconds);
                 
                 _bullet = Instantiate(droneBullet, transform.position, Quaternion.identity);

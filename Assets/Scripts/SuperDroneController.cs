@@ -1,18 +1,16 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
 {
-    public class DroneController : MonoBehaviour
+    public class SuperDroneController : MonoBehaviour
     {
         public GameObject droneBullet;
         public float bulletSpeed;
         public float shootTimeRangeFrom;
         public float shootTimeRangeTo;
         public int hitPoints = 1;
-        public static DroneController Instance;
+        public static SuperDroneController Instance;
 
         private void Awake()
         {

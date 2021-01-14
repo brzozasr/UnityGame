@@ -6,6 +6,8 @@ TagManager:
   tags:
   - enemy
   - DgoneBullet
+  - FxTemporaire
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -6,15 +6,10 @@ namespace DefaultNamespace
     public class DroneBulletController : MonoBehaviour
     {
         public GameObject explosion;
+        public float bulletSpeed ;
         
-        private readonly float _bulletSpeed = DroneController.Instance.bulletSpeed;
         private Transform _playerTransform;
         private float _destinationPosition;
-
-        private void Start()
-        {
-           
-        }
 
         private void Awake()
         {
@@ -39,7 +34,7 @@ namespace DefaultNamespace
         {
             transform.position = Vector3.MoveTowards(transform.position,
                 new Vector3(_destinationPosition, transform.position.y, transform.position.z), 
-                _bulletSpeed * Time.deltaTime);
+                bulletSpeed * Time.deltaTime);
 
             if (Math.Abs(transform.position.x - _destinationPosition) < 25)
             {

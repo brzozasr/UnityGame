@@ -8,15 +8,12 @@ namespace DefaultNamespace
     public class DroneController : MonoBehaviour
     {
         public GameObject droneBullet;
-        public float bulletSpeed;
         public float shootTimeRangeFrom;
         public float shootTimeRangeTo;
         public int hitPoints = 1;
-        public static DroneController Instance;
 
         private void Awake()
         {
-            Instance = this;
             StartCoroutine(Shooting());
         }
 

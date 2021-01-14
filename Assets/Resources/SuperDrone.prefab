@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8578028212931502072}
   - component: {fileID: 8578028212932500792}
   - component: {fileID: -9175365468554012843}
+  - component: {fileID: -4797317673796785387}
   m_Layer: 0
   m_Name: SuperDrone
   m_TagString: Enemy
@@ -95,3 +96,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: c44363b453ebf2c4080d46d933cb73eb, type: 3}
+--- !u!114 &-4797317673796785387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8578028212934427640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2630f0f84934b7ab79ba2371ae065ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  droneBullet: {fileID: 6211730305104229135, guid: 0279cc11a41d342f7b4dd20c58159edd,
+    type: 3}
+  shootTimeRangeFrom: 4
+  shootTimeRangeTo: 8
+  hitPoints: 3
+  maxMoveY: 1
+  moveSpeed: 1

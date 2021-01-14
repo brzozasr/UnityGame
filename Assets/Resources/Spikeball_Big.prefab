@@ -108,3 +108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05007fe37e2b4c20b10b60620fc351e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  droneBullet: {fileID: 6211730305104229135, guid: 0279cc11a41d342f7b4dd20c58159edd,
+    type: 3}
+  shootTimeRangeFrom: 8
+  shootTimeRangeTo: 18
+  hitPoints: 1

@@ -11,61 +11,75 @@ namespace DefaultNamespace
         public float moveSpeed;
 
         private Transform _currentTransform;
-        private float _posX;
-        private float _posY;
-        private float _posZ;
-        private bool _isCall = false;
-        private bool _isMoveUp = true;
-        private int _frame;
-        private int _iterator = 0;
+        private float _posSuperX;
+        private float _posSuperY;
+        private float _posSuperZ;
+        private bool _isSuperCall = false;
+        private bool _isSuperMoveUp = true;
+        private int _frameSuper;
+        private int _iteratorSuper = 0;
 
-        private void Start()
+        private void Awake()
         {
-            if (_isCall == false)
+            if (_isSuperCall == false)
             {
-                _isCall = true;
+                _isSuperCall = true;
                 var pos = transform.position;
-                _posX = pos.x;
-                _posY = pos.y;
-                _posZ = pos.z;
+                _posSuperX = pos.x;
+                _posSuperY = pos.y;
+                _posSuperZ = pos.z;
 
-                _frame = Random.Range(0, 31);
+                _frameSuper = Random.Range(0, 31);
             }
+            
+            MainCamera = Camera.main;
+            DroneRenderer = GetComponent<Renderer>();
+            
+            StartCoroutine(Shooting());
         }
 
         private void Update()
         {
-            if (_iterator >= _frame)
+            if (_iteratorSuper >= _frameSuper)
             {
                 transform.Rotate(Vector3.up, 180.0f * Time.deltaTime);
                 var pos = transform.position;
 
-                if (pos.y < _posY + maxMoveY && _isMoveUp)
+                if (pos.y < _posSuperY + maxMoveY && _isSuperMoveUp)
                 {
                     transform.position = Vector3.MoveTowards(transform.position,
-                        new Vector3(pos.x, _posY + maxMoveY, pos.z),
+                        new Vector3(pos.x, _posSuperY + maxMoveY, pos.z),
                         moveSpeed * Time.deltaTime);
-                    if (Math.Abs(pos.y - (_posY + maxMoveY)) < 0.1f)
+                    if (Math.Abs(pos.y - (_posSuperY + maxMoveY)) < 0.1f)
                     {
-                        _isMoveUp = false;
+                        _isSuperMoveUp = false;
                     }
                 }
                 else
                 {
                     transform.position = Vector3.MoveTowards(transform.position,
-                        new Vector3(_posX, _posY, _posZ),
+                        new Vector3(_posSuperX, _posSuperY, _posSuperZ),
                         moveSpeed * Time.deltaTime);
-                    if (Math.Abs(_posY - pos.y) < 0.1f)
+                    if (Math.Abs(_posSuperY - pos.y) < 0.1f)
                     {
-                        _isMoveUp = true;
+                        _isSuperMoveUp = true;
                     }
                 }
             }
 
             // Number of frames delay
-            if (_frame >= _iterator)
+            if (_frameSuper >= _iteratorSuper)
             {
-                _iterator++;
+                _iteratorSuper++;
+            }
+            
+            if (DroneRenderer.IsVisibleFrom(MainCamera))
+            {
+                IsDroneVisible = true;
+            }
+            else
+            {
+                IsDroneVisible = false;
             }
         }
     }

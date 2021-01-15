@@ -110,7 +110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   droneBullet: {fileID: 6211730305104229135, guid: 0279cc11a41d342f7b4dd20c58159edd,
     type: 3}
-  bulletSpeed: 5
   shootTimeRangeFrom: 8
   shootTimeRangeTo: 12
-  hitPoints: 10
+  hitPoints: 1

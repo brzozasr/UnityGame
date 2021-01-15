@@ -114,3 +114,4 @@ MonoBehaviour:
   hitPoints: 10
   maxMoveY: 1.5
   moveSpeed: 2.5
+  maxMoveX: 1.5

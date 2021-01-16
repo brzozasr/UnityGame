@@ -10,6 +10,7 @@ namespace DefaultNamespace
         
         private void Start()
         {
+            FindObjectOfType<AudioManager>().PlaySound("BackgroundMusic");
             _camera = transform.GetChild(0);
         }
 

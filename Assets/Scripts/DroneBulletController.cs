@@ -61,6 +61,11 @@ namespace DefaultNamespace
                 Instantiate(explosion, transform.position, transform.rotation);
                 Destroy(gameObject);
             }
+            
+            if(other.gameObject.CompareTag("Player"))
+            {
+                FindObjectOfType<AudioManager>().PlaySound("BulletHitPlayer");
+            }
         }
     }
 }

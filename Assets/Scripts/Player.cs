@@ -11,10 +11,14 @@ public class Player : MonoBehaviour
     public GameObject _playerBullet;
     public GameObject _gunHole;
     public float _shotFrequency;
+    public float _jumpForce;
+    public Animation _dieAnim;
+    [SerializeField] private int _livePoints;
     
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
     private bool _runKeyPressed = false;
+    private bool _dieKeyPressed;
 
     private float _horizontalInput;
     private PlayerBulletController _playerBulletScript;
@@ -27,6 +31,7 @@ public class Player : MonoBehaviour
     private int MoveSpeed;
     private DateTime _shotTime;
     private GameObject _arm;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +71,9 @@ public class Player : MonoBehaviour
                 _runKeyPressed = true;
             else
                 _runKeyPressed = false;
+
+        if (Input.GetKeyDown(KeyCode.D))
+            _dieKeyPressed = true;
         
         
         _horizontalInput = Input.GetAxis("Horizontal");
@@ -83,7 +91,7 @@ public class Player : MonoBehaviour
         
         if (_spaceKeyPressed && Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
         {
-            _rigidbody.AddForce(Vector3.up * 5, ForceMode.VelocityChange);
+            _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
         }
 
         if (Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
@@ -118,9 +126,11 @@ public class Player : MonoBehaviour
             _animator.SetBool("shot", true);
             Shot();
         }
-        
         else
             _animator.SetBool("shot", false);
+        
+        if (_dieKeyPressed)
+            _animator.SetBool("die", false);
     }
 
     private void Shot()
@@ -146,6 +156,20 @@ public class Player : MonoBehaviour
         if (other.gameObject.layer == 9)
         {
             Destroy(other.gameObject);
+        }
+    }
+    
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("DgoneBullet"))
+        {
+            Debug.Log(_livePoints.ToString());
+            _livePoints--;
+        }
+
+        if (_livePoints <= 0)
+        {
+            _animator.SetBool("die", true);
         }
     }
 }

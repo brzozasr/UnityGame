@@ -23,9 +23,13 @@ namespace DefaultNamespace
         private float _destPosX;
         
         private AudioManager _megaDroneAudioManager;
-        private GameObject _imgBgCounterGO;
-        private GameObject _pointCounterGO;
-        private TextMeshProUGUI _hitCounter;
+        private GameObject _imgBgMegaCounterGO;
+        private GameObject _pointMegaCounterGO;
+        private TextMeshProUGUI _hitMegaCounter;
+        
+        private Bounds _meshMega;
+        private float _droneMegaWidth;
+        private float _droneMegaHeight;
         
         private void Awake()
         {
@@ -47,6 +51,9 @@ namespace DefaultNamespace
             DroneRenderer = GetComponent<Renderer>();
             
             StartCoroutine(Shooting());
+            
+            _meshMega = FindObjectOfType<MeshCollider>().bounds;
+            GetDroneHeightAndWidth();
             
             _playerTransform = GetPlayerTransform();
                 
@@ -105,10 +112,11 @@ namespace DefaultNamespace
                 _iteratorMega++;
             }
             
+            GetDroneHeightAndWidth();
             Vector3 textPos = MainCamera.WorldToScreenPoint(transform.position);
-            _imgBgCounterGO.transform.position = new Vector3(textPos.x, textPos.y + 207, textPos.z);
-            _pointCounterGO.transform.position = new Vector3(textPos.x, textPos.y + 207, textPos.z);
-            _hitCounter.text = hitPoints.ToString();
+            _imgBgMegaCounterGO.transform.position = new Vector3(textPos.x, textPos.y + _droneMegaHeight, textPos.z);
+            _pointMegaCounterGO.transform.position = new Vector3(textPos.x, textPos.y + _droneMegaHeight, textPos.z);
+            _hitMegaCounter.text = hitPoints.ToString();
             
             if (DroneRenderer.IsVisibleFrom(MainCamera))
             {
@@ -157,35 +165,47 @@ namespace DefaultNamespace
             if (hitPoints <= 0)
             {
                 Destroy(gameObject);
-                Destroy(_pointCounterGO);
-                Destroy(_imgBgCounterGO);
+                Destroy(_pointMegaCounterGO);
+                Destroy(_imgBgMegaCounterGO);
             }
         }
         
         private void CreateHitLabel()
         {
-            _imgBgCounterGO = new GameObject();
-            _imgBgCounterGO.transform.parent = canvas.transform;
-            _imgBgCounterGO.AddComponent<Image>();
-            Image imageBg = _imgBgCounterGO.GetComponent<Image>();
+            _imgBgMegaCounterGO = new GameObject();
+            _imgBgMegaCounterGO.transform.parent = canvas.transform;
+            _imgBgMegaCounterGO.AddComponent<Image>();
+            Image imageBg = _imgBgMegaCounterGO.GetComponent<Image>();
             imageBg.color = Color.gray;
             var image = imageBg.GetComponent<RectTransform>();
-            image.sizeDelta = new Vector2(70, 40);
+            image.sizeDelta = new Vector2(40, 20);
             
-            _pointCounterGO = new GameObject();
-            _pointCounterGO.transform.parent = canvas.transform;
-            _pointCounterGO.AddComponent<TextMeshProUGUI>();
-            _hitCounter = _pointCounterGO.GetComponent<TextMeshProUGUI>();
-            _hitCounter.fontSize = 40;
-            _hitCounter.fontWeight = FontWeight.Bold;
-            _hitCounter.color = new Color(255, 255, 255);
-            _hitCounter.alignment = TextAlignmentOptions.Top;
-            _hitCounter.font = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
+            _pointMegaCounterGO = new GameObject();
+            _pointMegaCounterGO.transform.parent = canvas.transform;
+            _pointMegaCounterGO.AddComponent<TextMeshProUGUI>();
+            _hitMegaCounter = _pointMegaCounterGO.GetComponent<TextMeshProUGUI>();
+            _hitMegaCounter.fontSize = 20;
+            _hitMegaCounter.fontWeight = FontWeight.Bold;
+            _hitMegaCounter.color = new Color(255, 255, 255);
+            _hitMegaCounter.alignment = TextAlignmentOptions.Top;
+            _hitMegaCounter.font = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
             
-            _hitCounter.text = hitPoints.ToString();
-            var counterSize = _hitCounter.GetComponent<RectTransform>();
-            counterSize.sizeDelta = new Vector2(70, 40);
+            _hitMegaCounter.text = hitPoints.ToString();
+            var counterSize = _hitMegaCounter.GetComponent<RectTransform>();
+            counterSize.sizeDelta = new Vector2(40, 20);
             // counterSize.ForceUpdateRectTransforms();
+        }
+        
+        /// <summary>
+        /// Get height and width of the drone depend on the game screen.
+        /// </summary>
+        private void GetDroneHeightAndWidth()
+        {
+            Vector3 posStart = MainCamera.WorldToScreenPoint(new Vector3(_meshMega.min.x, _meshMega.min.y, _meshMega.min.z));
+            Vector3 posEnd = MainCamera.WorldToScreenPoint(new Vector3(_meshMega.max.x, _meshMega.max.y, _meshMega.min.z));
+ 
+            _droneMegaWidth = (posEnd.x - posStart.x) / 2 + (posEnd.x - posStart.x) * 0.55f;
+            _droneMegaHeight = (posEnd.y - posStart.y) / 2 + (posEnd.y - posStart.y) * 0.55f;;
         }
     }
 }

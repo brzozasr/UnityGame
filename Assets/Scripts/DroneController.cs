@@ -23,6 +23,10 @@ namespace DefaultNamespace
         private GameObject _pointCounterGO;
         private TextMeshProUGUI _hitCounter;
 
+        private Bounds _mesh;
+        private float _droneWidth;
+        private float _droneHeight;
+
         private void Awake()
         {
             CreateHitLabel();
@@ -30,13 +34,18 @@ namespace DefaultNamespace
             MainCamera = Camera.main;
             DroneRenderer = GetComponent<Renderer>();
             StartCoroutine(Shooting());
+            
+            _mesh = FindObjectOfType<MeshCollider>().bounds;
+            GetDroneHeightAndWidth();
         }
 
         private void Update()
         {
+            GetDroneHeightAndWidth();
+            
             Vector3 textPos = MainCamera.WorldToScreenPoint(transform.position);
-            _imgBgCounterGO.transform.position = new Vector3(textPos.x, textPos.y + 115, textPos.z);
-            _pointCounterGO.transform.position = new Vector3(textPos.x, textPos.y + 115, textPos.z);
+            _imgBgCounterGO.transform.position = new Vector3(textPos.x, textPos.y + _droneHeight, textPos.z);
+            _pointCounterGO.transform.position = new Vector3(textPos.x, textPos.y + _droneHeight, textPos.z);
             _hitCounter.text = hitPoints.ToString();
             
             transform.Rotate(Vector3.up, 180.0f * Time.deltaTime);
@@ -89,13 +98,13 @@ namespace DefaultNamespace
             Image imageBg = _imgBgCounterGO.GetComponent<Image>();
             imageBg.color = Color.gray;
             var image = imageBg.GetComponent<RectTransform>();
-            image.sizeDelta = new Vector2(70, 40);
+            image.sizeDelta = new Vector2(40, 20);
             
             _pointCounterGO = new GameObject();
             _pointCounterGO.transform.parent = canvas.transform;
             _pointCounterGO.AddComponent<TextMeshProUGUI>();
             _hitCounter = _pointCounterGO.GetComponent<TextMeshProUGUI>();
-            _hitCounter.fontSize = 40;
+            _hitCounter.fontSize = 20;
             _hitCounter.fontWeight = FontWeight.Bold;
             _hitCounter.color = new Color(255, 255, 255);
             _hitCounter.alignment = TextAlignmentOptions.Top;
@@ -103,8 +112,20 @@ namespace DefaultNamespace
             
             _hitCounter.text = hitPoints.ToString();
             var counterSize = _hitCounter.GetComponent<RectTransform>();
-            counterSize.sizeDelta = new Vector2(70, 40);
+            counterSize.sizeDelta = new Vector2(40, 20);
             // counterSize.ForceUpdateRectTransforms();
+        }
+
+        /// <summary>
+        /// Get height and width of the drone depend on the game screen.
+        /// </summary>
+        private void GetDroneHeightAndWidth()
+        {
+            Vector3 posStart = MainCamera.WorldToScreenPoint(new Vector3(_mesh.min.x, _mesh.min.y, _mesh.min.z));
+            Vector3 posEnd = MainCamera.WorldToScreenPoint(new Vector3(_mesh.max.x, _mesh.max.y, _mesh.min.z));
+ 
+            _droneWidth = (posEnd.x - posStart.x) / 2 + (posEnd.x - posStart.x) * 0.08f;
+            _droneHeight = (posEnd.y - posStart.y) / 2 + (posEnd.y - posStart.y) * 0.08f;;
         }
     }
 }

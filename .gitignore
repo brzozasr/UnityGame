@@ -49,4 +49,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+.DS_Store
+
 # End of https://www.gitignore.io/api/unity

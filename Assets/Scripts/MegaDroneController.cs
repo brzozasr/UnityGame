@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -178,13 +179,13 @@ namespace DefaultNamespace
             Image imageBg = _imgBgMegaCounterGO.GetComponent<Image>();
             imageBg.color = Color.gray;
             var image = imageBg.GetComponent<RectTransform>();
-            image.sizeDelta = new Vector2(40, 20);
+            image.sizeDelta = new Vector2(30, 15);
             
             _pointMegaCounterGO = new GameObject();
             _pointMegaCounterGO.transform.parent = canvas.transform;
             _pointMegaCounterGO.AddComponent<TextMeshProUGUI>();
             _hitMegaCounter = _pointMegaCounterGO.GetComponent<TextMeshProUGUI>();
-            _hitMegaCounter.fontSize = 20;
+            _hitMegaCounter.fontSize = 15;
             _hitMegaCounter.fontWeight = FontWeight.Bold;
             _hitMegaCounter.color = new Color(255, 255, 255);
             _hitMegaCounter.alignment = TextAlignmentOptions.Top;
@@ -192,8 +193,14 @@ namespace DefaultNamespace
             
             _hitMegaCounter.text = hitPoints.ToString();
             var counterSize = _hitMegaCounter.GetComponent<RectTransform>();
-            counterSize.sizeDelta = new Vector2(40, 20);
+            counterSize.sizeDelta = new Vector2(30, 15);
             // counterSize.ForceUpdateRectTransforms();
+            
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                imageBg.enabled = false;
+                _hitMegaCounter.enabled = false;
+            }
         }
         
         /// <summary>

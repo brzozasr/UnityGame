@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 namespace DefaultNamespace
 {
@@ -98,13 +99,13 @@ namespace DefaultNamespace
             Image imageBg = _imgBgCounterGO.GetComponent<Image>();
             imageBg.color = Color.gray;
             var image = imageBg.GetComponent<RectTransform>();
-            image.sizeDelta = new Vector2(40, 20);
+            image.sizeDelta = new Vector2(30, 15);
             
             _pointCounterGO = new GameObject();
             _pointCounterGO.transform.parent = canvas.transform;
             _pointCounterGO.AddComponent<TextMeshProUGUI>();
             _hitCounter = _pointCounterGO.GetComponent<TextMeshProUGUI>();
-            _hitCounter.fontSize = 20;
+            _hitCounter.fontSize = 15;
             _hitCounter.fontWeight = FontWeight.Bold;
             _hitCounter.color = new Color(255, 255, 255);
             _hitCounter.alignment = TextAlignmentOptions.Top;
@@ -112,8 +113,14 @@ namespace DefaultNamespace
             
             _hitCounter.text = hitPoints.ToString();
             var counterSize = _hitCounter.GetComponent<RectTransform>();
-            counterSize.sizeDelta = new Vector2(40, 20);
+            counterSize.sizeDelta = new Vector2(30, 15);
             // counterSize.ForceUpdateRectTransforms();
+
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                imageBg.enabled = false;
+                _hitCounter.enabled = false;
+            }
         }
 
         /// <summary>

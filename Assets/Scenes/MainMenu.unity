@@ -437,6 +437,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7285516130076808199, guid: 7643635d3c4154e2abb1dc45e3fa91b0,
+        type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 1718685201}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7643635d3c4154e2abb1dc45e3fa91b0, type: 3}
 --- !u!1 &828696052
@@ -730,6 +735,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4801664383691231192, guid: f7349d75432a747679529869c1835d27,
         type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 1718685201}
+    - target: {fileID: 4801664383691231192, guid: f7349d75432a747679529869c1835d27,
+        type: 3}
       propertyPath: shootTimeRangeTo
       value: 3
       objectReference: {fileID: 0}
@@ -880,6 +890,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4797317673796785387, guid: e5c6b47d615cd449f81b965844b52e69,
+        type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 1718685201}
     - target: {fileID: -4797317673796785387, guid: e5c6b47d615cd449f81b965844b52e69,
         type: 3}
       propertyPath: shootTimeRangeTo

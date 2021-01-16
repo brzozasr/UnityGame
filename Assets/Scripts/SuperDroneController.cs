@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -144,13 +145,13 @@ namespace DefaultNamespace
             Image imageBg = _imgBgSuperCounterGO.GetComponent<Image>();
             imageBg.color = Color.gray;
             var image = imageBg.GetComponent<RectTransform>();
-            image.sizeDelta = new Vector2(40, 20);
+            image.sizeDelta = new Vector2(30, 15);
             
             _pointSuperCounterGO = new GameObject();
             _pointSuperCounterGO.transform.parent = canvas.transform;
             _pointSuperCounterGO.AddComponent<TextMeshProUGUI>();
             _hitSuperCounter = _pointSuperCounterGO.GetComponent<TextMeshProUGUI>();
-            _hitSuperCounter.fontSize = 20;
+            _hitSuperCounter.fontSize = 15;
             _hitSuperCounter.fontWeight = FontWeight.Bold;
             _hitSuperCounter.color = new Color(255, 255, 255);
             _hitSuperCounter.alignment = TextAlignmentOptions.Top;
@@ -158,8 +159,14 @@ namespace DefaultNamespace
             
             _hitSuperCounter.text = hitPoints.ToString();
             var counterSize = _hitSuperCounter.GetComponent<RectTransform>();
-            counterSize.sizeDelta = new Vector2(40, 20);
+            counterSize.sizeDelta = new Vector2(30, 15);
             // counterSize.ForceUpdateRectTransforms();
+            
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                imageBg.enabled = false;
+                _hitSuperCounter.enabled = false;
+            }
         }
         
         /// <summary>

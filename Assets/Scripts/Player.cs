@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private Transform _groundCheck = null;
     [SerializeField] private LayerMask _playerMask;
+    public GameObject _playerBullet;
+    public GameObject _gunHole;
+    public float _shotFrequency;
+    
     private bool _spaceKeyPressed;
-    private bool _fKeyPressed;
-    private bool _rKeyPressed = false;
+    private bool _fireKeyPressed;
+    private bool _runKeyPressed = false;
 
     private float _horizontalInput;
-
+    private PlayerBulletController _playerBulletScript;
     private Rigidbody _rigidbody;
     private Animator _animator;
     private bool _lookRight;
@@ -20,12 +25,20 @@ public class Player : MonoBehaviour
     [SerializeField] private int WalkSpeed;
     [SerializeField] private int RunSpeed;
     private int MoveSpeed;
+    private DateTime _shotTime;
+    private GameObject _arm;
 
     // Start is called before the first frame update
     void Start()
     {
+        _shotTime = DateTime.Now;
+        _playerBulletScript = _playerBullet.GetComponent<PlayerBulletController>();
+
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
+
+        _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
+        
     }
 
     // Update is called once per frame
@@ -36,11 +49,11 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.F))
         {
             _spaceKeyPressed = false;
-            _fKeyPressed = true;
+            _fireKeyPressed = true;
         }
         else if (Input.GetKeyUp(KeyCode.F))
         {
-            _fKeyPressed = false;
+            _fireKeyPressed = false;
             _spaceKeyPressed = false;
         }
         else
@@ -49,10 +62,10 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R))
-            if (_rKeyPressed == false)
-                _rKeyPressed = true;
+            if (_runKeyPressed == false)
+                _runKeyPressed = true;
             else
-                _rKeyPressed = false;
+                _runKeyPressed = false;
         
         
         _horizontalInput = Input.GetAxis("Horizontal");
@@ -80,7 +93,7 @@ public class Player : MonoBehaviour
         
         if (_horizontalInput != 0)
         {
-            if (_rKeyPressed == false)
+            if (_runKeyPressed == false)
             {
                 _animator.SetBool("walk", true);
                 MoveSpeed = WalkSpeed;
@@ -92,7 +105,7 @@ public class Player : MonoBehaviour
             }
         }
         else
-            if (_rKeyPressed == false)
+            if (_runKeyPressed == false)
                 _animator.SetBool("walk", false);
             else
                 _animator.SetBool("run", false);
@@ -100,10 +113,27 @@ public class Player : MonoBehaviour
         if (_spaceKeyPressed)
             _animator.SetBool("jump", true);
         
-        if (_fKeyPressed)
+        if (_fireKeyPressed)
+        {
             _animator.SetBool("shot", true);
+            Shot();
+        }
+        
         else
             _animator.SetBool("shot", false);
+    }
+
+    private void Shot()
+    {
+        
+        if ((DateTime.Now - _shotTime).Milliseconds > (1000 / _shotFrequency))
+        {
+            var bullet = Instantiate(_playerBullet, _arm.transform.position, Quaternion.identity);
+            bullet.GetComponent<Rigidbody>()
+                .AddForce(_gunHole.transform.forward * _playerBulletScript.Speed, ForceMode.Impulse);
+            
+            _shotTime = DateTime.Now;
+        }
     }
 
     private void FixedUpdate()

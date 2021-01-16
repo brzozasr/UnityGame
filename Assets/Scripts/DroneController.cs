@@ -58,7 +58,7 @@ namespace DefaultNamespace
         {
             // TODO not "Player" but also "PlayerBullet" with ||
             
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("PlayerBullet"))
             {
                 hitPoints--;
             }

@@ -12,6 +12,7 @@ namespace DefaultNamespace
         public float shootTimeRangeTo;
         public int hitPoints = 1;
         
+        
         protected Renderer DroneRenderer;
         protected bool IsDroneVisible = false;
         protected Camera MainCamera;

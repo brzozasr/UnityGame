@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
     public float _shotFrequency;
     public float _jumpForce;
     public Animation _dieAnim;
-    [SerializeField] private int _livePoints;
+    [SerializeField] private float _livePoints;
+    private float _actualLivePoints;
     
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
@@ -31,11 +32,12 @@ public class Player : MonoBehaviour
     private int MoveSpeed;
     private DateTime _shotTime;
     private GameObject _arm;
-    
+    public static event EventHandler<float> OnHit;
 
     // Start is called before the first frame update
     void Start()
     {
+        _actualLivePoints = _livePoints;
         _shotTime = DateTime.Now;
         _playerBulletScript = _playerBullet.GetComponent<PlayerBulletController>();
 
@@ -164,10 +166,11 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("DgoneBullet"))
         {
             Debug.Log(_livePoints.ToString());
-            _livePoints--;
+            _actualLivePoints--;
+            OnHit?.Invoke(this, _actualLivePoints / _livePoints);
         }
 
-        if (_livePoints <= 0)
+        if (_actualLivePoints <= 0)
         {
             _animator.SetBool("die", true);
         }

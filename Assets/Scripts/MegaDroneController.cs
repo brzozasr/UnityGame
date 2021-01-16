@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,6 +20,8 @@ namespace DefaultNamespace
         private Transform _playerTransform;
         private float _destPosX;
         
+        private AudioManager _megaDroneAudioManager;
+        
         private void Awake()
         {
             if (_isMegaCall == false)
@@ -33,6 +36,7 @@ namespace DefaultNamespace
                 _moveHorizontal = Random.Range(0, 2);
             }
             
+            _megaDroneAudioManager = FindObjectOfType<AudioManager>();
             MainCamera = Camera.main;
             DroneRenderer = GetComponent<Renderer>();
             
@@ -102,6 +106,21 @@ namespace DefaultNamespace
             else
             {
                 IsDroneVisible = false;
+            }
+        }
+
+        private IEnumerator Shooting()
+        {
+            while (true)
+            {
+                float seconds = Random.Range(shootTimeRangeFrom, shootTimeRangeTo);
+                yield return new WaitForSeconds(seconds);
+
+                if (IsDroneVisible)
+                {
+                    Instantiate(droneBullet, transform.position, Quaternion.identity);
+                    _megaDroneAudioManager.PlaySound("DroneShot");
+                }
             }
         }
         

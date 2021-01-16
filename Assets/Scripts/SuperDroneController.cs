@@ -18,6 +18,8 @@ namespace DefaultNamespace
         private bool _isSuperMoveUp = true;
         private int _frameSuper;
         private int _iteratorSuper = 0;
+        
+        private AudioManager _superDroneAudioManager;
 
         private void Awake()
         {
@@ -32,6 +34,7 @@ namespace DefaultNamespace
                 _frameSuper = Random.Range(0, 31);
             }
             
+            _superDroneAudioManager = FindObjectOfType<AudioManager>();
             MainCamera = Camera.main;
             DroneRenderer = GetComponent<Renderer>();
             
@@ -80,6 +83,21 @@ namespace DefaultNamespace
             else
             {
                 IsDroneVisible = false;
+            }
+        }
+
+        private IEnumerator Shooting()
+        {
+            while (true)
+            {
+                float seconds = Random.Range(shootTimeRangeFrom, shootTimeRangeTo);
+                yield return new WaitForSeconds(seconds);
+
+                if (IsDroneVisible)
+                {
+                    Instantiate(droneBullet, transform.position, Quaternion.identity);
+                    _superDroneAudioManager.PlaySound("DroneShot");
+                }
             }
         }
     }

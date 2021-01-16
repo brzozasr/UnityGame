@@ -15,9 +15,11 @@ namespace DefaultNamespace
         protected Renderer DroneRenderer;
         protected bool IsDroneVisible = false;
         protected Camera MainCamera;
+        private AudioManager _droneAudioManager;
 
         private void Awake()
         {
+            _droneAudioManager = FindObjectOfType<AudioManager>();
             MainCamera = Camera.main;
             DroneRenderer = GetComponent<Renderer>();
             StartCoroutine(Shooting());
@@ -37,7 +39,7 @@ namespace DefaultNamespace
             }
         }
 
-        protected IEnumerator Shooting()
+        private IEnumerator Shooting()
         {
             while (true)
             {
@@ -47,6 +49,7 @@ namespace DefaultNamespace
                 if (IsDroneVisible)
                 {
                     Instantiate(droneBullet, transform.position, Quaternion.identity);
+                    _droneAudioManager.PlaySound("DroneShot");
                 }
             }
         }

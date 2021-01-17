@@ -14,12 +14,14 @@ public class Player : MonoBehaviour
     public float _jumpForce;
     public Animation _dieAnim;
     [SerializeField] private float _livePoints;
+    [SerializeField] private float _flyForce;
     private float _actualLivePoints;
     
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
     private bool _runKeyPressed = false;
     private bool _dieKeyPressed;
+    private bool _flyKeyPressed;
 
     private float _horizontalInput;
     private PlayerBulletController _playerBulletScript;
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int WalkSpeed;
     [SerializeField] private int RunSpeed;
     [SerializeField] private int ResurectionDelaySec;
+    [SerializeField] private ParticleSystem MuzzleFlash;
     private int MoveSpeed;
     private DateTime _shotTime;
     private GameObject _arm;
@@ -87,6 +90,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.D))
             _dieKeyPressed = true;
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            _flyKeyPressed = true;
+        
+        if (Input.GetKeyUp(KeyCode.UpArrow))
+            _flyKeyPressed = false;
         
         
         _horizontalInput = Input.GetAxis("Horizontal");
@@ -103,10 +112,18 @@ public class Player : MonoBehaviour
             _lookRight = false;
             OnTurn?.Invoke(this, EventArgs.Empty);
         }
+
+        var overlapedGameObjects = Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length;
         
-        if (_spaceKeyPressed && Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
+        if (_spaceKeyPressed && overlapedGameObjects > 0)
         {
             _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
+        }
+        
+        if (_flyKeyPressed)
+        {
+            Debug.Log("fly");
+            _rigidbody.AddForce(Vector3.up * (_flyForce * Time.deltaTime), ForceMode.Impulse);
         }
 
         if (Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
@@ -116,15 +133,25 @@ public class Player : MonoBehaviour
         
         if (_horizontalInput != 0)
         {
-            if (_runKeyPressed == false)
+            if (overlapedGameObjects > 0)
             {
-                _animator.SetBool("walk", true);
-                MoveSpeed = WalkSpeed;
+                if (_runKeyPressed == false)
+                {
+                    _animator.SetBool("walk", true);
+                    MoveSpeed = WalkSpeed;
+                }
+                else
+                {
+                    _animator.SetBool("run", true);
+                    MoveSpeed = RunSpeed;
+                }
             }
             else
             {
-                _animator.SetBool("run", true);
-                MoveSpeed = RunSpeed;
+                if (_runKeyPressed == false)
+                    _animator.SetBool("walk", false);
+                else
+                    _animator.SetBool("run", false);
             }
         }
         else
@@ -156,6 +183,11 @@ public class Player : MonoBehaviour
             var bullet = Instantiate(_playerBullet, _arm.transform.position, Quaternion.identity);
             bullet.GetComponent<Rigidbody>()
                 .AddForce(_gunHole.transform.forward * _playerBulletScript.Speed, ForceMode.Impulse);
+            
+            MuzzleFlash.Play();
+
+            //var muzzle = Instantiate(MuzzleFlash, _gunHole.transform.position, Quaternion.identity);
+            
             
             _shotTime = DateTime.Now;
         }

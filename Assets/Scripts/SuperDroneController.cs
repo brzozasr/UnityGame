@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
@@ -20,6 +23,9 @@ namespace DefaultNamespace
         private int _iteratorSuper = 0;
         
         private AudioManager _superDroneAudioManager;
+        private GameObject _imgBgSuperCounterGO;
+        private GameObject _pointSuperCounterGO;
+        private TextMeshProUGUI _hitSuperCounter;
 
         private void Awake()
         {
@@ -34,6 +40,7 @@ namespace DefaultNamespace
                 _frameSuper = Random.Range(0, 31);
             }
             
+            CreateHitLabel();
             _superDroneAudioManager = FindObjectOfType<AudioManager>();
             MainCamera = Camera.main;
             DroneRenderer = GetComponent<Renderer>();
@@ -76,6 +83,12 @@ namespace DefaultNamespace
                 _iteratorSuper++;
             }
             
+            var hitLabelHolder = gameObject.transform.GetChild(0);
+            Vector3 textPos = MainCamera.WorldToScreenPoint(hitLabelHolder.position);
+            _imgBgSuperCounterGO.transform.position = new Vector3(textPos.x, textPos.y, textPos.z);
+            _pointSuperCounterGO.transform.position = new Vector3(textPos.x, textPos.y, textPos.z);
+            _hitSuperCounter.text = hitPoints.ToString();
+
             if (DroneRenderer.IsVisibleFrom(MainCamera))
             {
                 IsDroneVisible = true;
@@ -98,6 +111,55 @@ namespace DefaultNamespace
                     Instantiate(droneBullet, transform.position, Quaternion.identity);
                     _superDroneAudioManager.PlaySound("DroneShot");
                 }
+            }
+        }
+        
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("PlayerBullet"))
+            {
+                hitPoints--;
+            }
+
+            if (hitPoints <= 0)
+            {
+                Instantiate(droneExplosion, transform.position, transform.rotation);
+                _superDroneAudioManager.PlaySound("DroneExplosion");
+                Destroy(gameObject);
+                Destroy(_pointSuperCounterGO);
+                Destroy(_imgBgSuperCounterGO);
+            }
+        }
+        
+        private void CreateHitLabel()
+        {
+            _imgBgSuperCounterGO = new GameObject();
+            _imgBgSuperCounterGO.transform.parent = canvas.transform;
+            _imgBgSuperCounterGO.AddComponent<Image>();
+            Image imageBg = _imgBgSuperCounterGO.GetComponent<Image>();
+            imageBg.color = Color.gray;
+            var image = imageBg.GetComponent<RectTransform>();
+            image.sizeDelta = new Vector2(38, 18);
+            
+            _pointSuperCounterGO = new GameObject();
+            _pointSuperCounterGO.transform.parent = canvas.transform;
+            _pointSuperCounterGO.AddComponent<TextMeshProUGUI>();
+            _hitSuperCounter = _pointSuperCounterGO.GetComponent<TextMeshProUGUI>();
+            _hitSuperCounter.fontSize = 18;
+            _hitSuperCounter.fontWeight = FontWeight.Bold;
+            _hitSuperCounter.color = new Color(255, 255, 255);
+            _hitSuperCounter.alignment = TextAlignmentOptions.Top;
+            _hitSuperCounter.font = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
+            
+            _hitSuperCounter.text = hitPoints.ToString();
+            var counterSize = _hitSuperCounter.GetComponent<RectTransform>();
+            counterSize.sizeDelta = new Vector2(38, 18);
+            // counterSize.ForceUpdateRectTransforms();
+            
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                imageBg.enabled = false;
+                _hitSuperCounter.enabled = false;
             }
         }
     }

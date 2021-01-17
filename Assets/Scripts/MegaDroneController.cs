@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
@@ -21,7 +24,10 @@ namespace DefaultNamespace
         private float _destPosX;
         
         private AudioManager _megaDroneAudioManager;
-        
+        private GameObject _imgBgMegaCounterGO;
+        private GameObject _pointMegaCounterGO;
+        private TextMeshProUGUI _hitMegaCounter;
+
         private void Awake()
         {
             if (_isMegaCall == false)
@@ -36,12 +42,13 @@ namespace DefaultNamespace
                 _moveHorizontal = Random.Range(0, 2);
             }
             
+            CreateHitLabel();
             _megaDroneAudioManager = FindObjectOfType<AudioManager>();
             MainCamera = Camera.main;
             DroneRenderer = GetComponent<Renderer>();
             
             StartCoroutine(Shooting());
-            
+
             _playerTransform = GetPlayerTransform();
                 
             if (transform.position.x >= _playerTransform.position.x)
@@ -99,6 +106,12 @@ namespace DefaultNamespace
                 _iteratorMega++;
             }
             
+            var hitLabelHolder = gameObject.transform.GetChild(0);
+            Vector3 textPos = MainCamera.WorldToScreenPoint(hitLabelHolder.position);
+            _imgBgMegaCounterGO.transform.position = new Vector3(textPos.x, textPos.y, textPos.z);
+            _pointMegaCounterGO.transform.position = new Vector3(textPos.x, textPos.y, textPos.z);
+            _hitMegaCounter.text = hitPoints.ToString();
+            
             if (DroneRenderer.IsVisibleFrom(MainCamera))
             {
                 IsDroneVisible = true;
@@ -134,6 +147,55 @@ namespace DefaultNamespace
             }
 
             return _playerTransform;
+        }
+        
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("PlayerBullet"))
+            {
+                hitPoints--;
+            }
+
+            if (hitPoints <= 0)
+            {
+                Instantiate(droneExplosion, transform.position, transform.rotation);
+                _megaDroneAudioManager.PlaySound("DroneExplosion");
+                Destroy(gameObject);
+                Destroy(_pointMegaCounterGO);
+                Destroy(_imgBgMegaCounterGO);
+            }
+        }
+        
+        private void CreateHitLabel()
+        {
+            _imgBgMegaCounterGO = new GameObject();
+            _imgBgMegaCounterGO.transform.parent = canvas.transform;
+            _imgBgMegaCounterGO.AddComponent<Image>();
+            Image imageBg = _imgBgMegaCounterGO.GetComponent<Image>();
+            imageBg.color = Color.gray;
+            var image = imageBg.GetComponent<RectTransform>();
+            image.sizeDelta = new Vector2(38, 18);
+            
+            _pointMegaCounterGO = new GameObject();
+            _pointMegaCounterGO.transform.parent = canvas.transform;
+            _pointMegaCounterGO.AddComponent<TextMeshProUGUI>();
+            _hitMegaCounter = _pointMegaCounterGO.GetComponent<TextMeshProUGUI>();
+            _hitMegaCounter.fontSize = 18;
+            _hitMegaCounter.fontWeight = FontWeight.Bold;
+            _hitMegaCounter.color = new Color(255, 255, 255);
+            _hitMegaCounter.alignment = TextAlignmentOptions.Top;
+            _hitMegaCounter.font = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
+            
+            _hitMegaCounter.text = hitPoints.ToString();
+            var counterSize = _hitMegaCounter.GetComponent<RectTransform>();
+            counterSize.sizeDelta = new Vector2(38, 18);
+            // counterSize.ForceUpdateRectTransforms();
+            
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                imageBg.enabled = false;
+                _hitMegaCounter.enabled = false;
+            }
         }
     }
 }

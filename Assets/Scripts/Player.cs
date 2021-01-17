@@ -188,7 +188,7 @@ public class Player : MonoBehaviour
     
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("DgoneBullet"))
+        if (other.gameObject.CompareTag("DgoneBullet") || other.gameObject.CompareTag("Enemy"))
         {
             Debug.Log($"Live points left: {livePoints.ToString(CultureInfo.CurrentCulture)}");
             _actualLivePoints--;

@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int WalkSpeed;
     [SerializeField] private int RunSpeed;
     [SerializeField] private int ResurectionDelaySec;
-    [SerializeField] private ParticleSystem MuzzleFlash;
+    [SerializeField] private GameObject MuzzleFlash;
     private int MoveSpeed;
     private DateTime _shotTime;
     private GameObject _arm;
@@ -184,10 +184,8 @@ public class Player : MonoBehaviour
             bullet.GetComponent<Rigidbody>()
                 .AddForce(_gunHole.transform.forward * _playerBulletScript.Speed, ForceMode.Impulse);
             
-            MuzzleFlash.Play();
-
-            //var muzzle = Instantiate(MuzzleFlash, _gunHole.transform.position, Quaternion.identity);
-            
+            var muzzle = Instantiate(MuzzleFlash, _gunHole.transform.position, Quaternion.identity);
+            muzzle.transform.SetParent(_gunHole.transform);
             
             _shotTime = DateTime.Now;
         }

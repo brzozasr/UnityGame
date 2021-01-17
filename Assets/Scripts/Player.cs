@@ -16,10 +16,11 @@ public class Player : MonoBehaviour
     public float jumpForce;
     public float livePoints;
     public float flyForce;
-    
+
     public int walkSpeed;
     public int runSpeed;
     public int resurectionDelaySec;
+    public int liveNumber;
     
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
@@ -198,6 +199,7 @@ public class Player : MonoBehaviour
         {
             _animator.SetBool(Die, true);
             Dead = true;
+            liveNumber--;
             _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
             _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
 

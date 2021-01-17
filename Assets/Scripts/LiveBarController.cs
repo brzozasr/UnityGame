@@ -8,10 +8,12 @@ namespace DefaultNamespace
         private float _liveValue;
         private Renderer _renderer;
         private GameObject _liveBar;
+        private GameObject _backgroud;
         private void Start()
         {
+            _backgroud = transform.parent.Find("LivebarBackground").gameObject;
             _liveBar = transform.Find("Livebar").gameObject;
-            _renderer = _liveBar.GetComponent<Renderer>();
+            _renderer = _backgroud.GetComponent<Renderer>();
             _liveValue = 1.0f;
             Player.OnHit += UpdateBar;
             //Player.OnTurn += TurnBar;
@@ -22,7 +24,7 @@ namespace DefaultNamespace
             //Debug.Log(value.ToString());
             var localScale = transform.localScale;
             transform.localScale = new Vector3(localScale.x, localScale.y, value);
-
+            
             Color color = new Color();
             if ((1 - value) <= 0.5f)
             {

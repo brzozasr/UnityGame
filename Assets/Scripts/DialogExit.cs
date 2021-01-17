@@ -9,18 +9,6 @@ namespace DefaultNamespace
     {
         public Canvas canvas;
 
-        private void Start()
-        {
-            // var dialogGameObject = GameObject.Find("DialogExit");
-            // Debug.Log($"{dialogGameObject.GetComponentInChildren(Type.GetType(), true)}");
-            // var b = canvas.GetComponent<TextMeshProUGUI>();
-            // Debug.Log($"{b.GetType()}");
-
-            // Transform trans = transform;
-            // Transform childTrans = trans.Find("ButtonYes");
-            // Debug.Log($"{childTrans.gameObject}");
-        }
-
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))

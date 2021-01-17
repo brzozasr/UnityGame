@@ -26,10 +26,6 @@ namespace DefaultNamespace
         private GameObject _imgBgSuperCounterGO;
         private GameObject _pointSuperCounterGO;
         private TextMeshProUGUI _hitSuperCounter;
-        
-        private Bounds _meshSuper;
-        private float _droneSuperWidth;
-        private float _droneSuperHeight;
 
         private void Awake()
         {
@@ -50,9 +46,6 @@ namespace DefaultNamespace
             DroneRenderer = GetComponent<Renderer>();
             
             StartCoroutine(Shooting());
-            
-            _meshSuper = FindObjectOfType<MeshCollider>().bounds;
-            GetDroneHeightAndWidth();
         }
 
         private void Update()
@@ -90,11 +83,10 @@ namespace DefaultNamespace
                 _iteratorSuper++;
             }
             
-            GetDroneHeightAndWidth();
-            
-            Vector3 textPos = MainCamera.WorldToScreenPoint(transform.position);
-            _imgBgSuperCounterGO.transform.position = new Vector3(textPos.x, textPos.y + _droneSuperHeight, textPos.z);
-            _pointSuperCounterGO.transform.position = new Vector3(textPos.x, textPos.y + _droneSuperHeight, textPos.z);
+            var hitLabelHolder = gameObject.transform.GetChild(0);
+            Vector3 textPos = MainCamera.WorldToScreenPoint(hitLabelHolder.position);
+            _imgBgSuperCounterGO.transform.position = new Vector3(textPos.x, textPos.y, textPos.z);
+            _pointSuperCounterGO.transform.position = new Vector3(textPos.x, textPos.y, textPos.z);
             _hitSuperCounter.text = hitPoints.ToString();
 
             if (DroneRenderer.IsVisibleFrom(MainCamera))
@@ -147,13 +139,13 @@ namespace DefaultNamespace
             Image imageBg = _imgBgSuperCounterGO.GetComponent<Image>();
             imageBg.color = Color.gray;
             var image = imageBg.GetComponent<RectTransform>();
-            image.sizeDelta = new Vector2(30, 15);
+            image.sizeDelta = new Vector2(38, 18);
             
             _pointSuperCounterGO = new GameObject();
             _pointSuperCounterGO.transform.parent = canvas.transform;
             _pointSuperCounterGO.AddComponent<TextMeshProUGUI>();
             _hitSuperCounter = _pointSuperCounterGO.GetComponent<TextMeshProUGUI>();
-            _hitSuperCounter.fontSize = 15;
+            _hitSuperCounter.fontSize = 18;
             _hitSuperCounter.fontWeight = FontWeight.Bold;
             _hitSuperCounter.color = new Color(255, 255, 255);
             _hitSuperCounter.alignment = TextAlignmentOptions.Top;
@@ -161,7 +153,7 @@ namespace DefaultNamespace
             
             _hitSuperCounter.text = hitPoints.ToString();
             var counterSize = _hitSuperCounter.GetComponent<RectTransform>();
-            counterSize.sizeDelta = new Vector2(30, 15);
+            counterSize.sizeDelta = new Vector2(38, 18);
             // counterSize.ForceUpdateRectTransforms();
             
             if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -169,18 +161,6 @@ namespace DefaultNamespace
                 imageBg.enabled = false;
                 _hitSuperCounter.enabled = false;
             }
-        }
-        
-        /// <summary>
-        /// Get height and width of the drone depend on the game screen.
-        /// </summary>
-        private void GetDroneHeightAndWidth()
-        {
-            Vector3 posStart = MainCamera.WorldToScreenPoint(new Vector3(_meshSuper.min.x, _meshSuper.min.y, _meshSuper.min.z));
-            Vector3 posEnd = MainCamera.WorldToScreenPoint(new Vector3(_meshSuper.max.x, _meshSuper.max.y, _meshSuper.min.z));
- 
-            _droneSuperWidth = (posEnd.x - posStart.x) / 2 + (posEnd.x - posStart.x) * 0.45f;
-            _droneSuperHeight = (posEnd.y - posStart.y) / 2 + (posEnd.y - posStart.y) * 0.45f;;
         }
     }
 }

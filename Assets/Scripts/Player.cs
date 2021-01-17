@@ -224,12 +224,12 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
             _spaceKeyPressed = true;
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             _spaceKeyPressed = false;
             _fireKeyPressed = true;
         }
-        else if (Input.GetKeyUp(KeyCode.F))
+        else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             _fireKeyPressed = false;
             _spaceKeyPressed = false;

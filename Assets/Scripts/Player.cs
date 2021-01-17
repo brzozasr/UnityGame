@@ -32,7 +32,12 @@ public class Player : MonoBehaviour
     private int MoveSpeed;
     private DateTime _shotTime;
     private GameObject _arm;
+    private BoxCollider _boxCollider;
     public static event EventHandler<float> OnHit;
+    public static event EventHandler OnTurn;
+    public static bool Dead = false;
+    private Vector3 _playerBoxColliderCenter;
+    private Vector3 _playerBoxColliderSize;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +45,10 @@ public class Player : MonoBehaviour
         _actualLivePoints = _livePoints;
         _shotTime = DateTime.Now;
         _playerBulletScript = _playerBullet.GetComponent<PlayerBulletController>();
+        _boxCollider = GetComponent<BoxCollider>();
+        _playerBoxColliderCenter = _boxCollider.center;
+        _playerBoxColliderSize = _boxCollider.size;
+        
 
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -84,11 +93,13 @@ public class Player : MonoBehaviour
         {
             transform.Rotate(Vector3.up, 180.0f);
             _lookRight = true;
+            OnTurn?.Invoke(this, EventArgs.Empty);
         }
         else if (_horizontalInput > 0 && _lookRight)
         {
             transform.Rotate(Vector3.up, 180.0f);
             _lookRight = false;
+            OnTurn?.Invoke(this, EventArgs.Empty);
         }
         
         if (_spaceKeyPressed && Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
@@ -173,6 +184,9 @@ public class Player : MonoBehaviour
         if (_actualLivePoints <= 0)
         {
             _animator.SetBool("die", true);
+            Dead = true;
+            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
+            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
         }
     }
 }

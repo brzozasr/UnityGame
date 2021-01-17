@@ -8,6 +8,7 @@ TagManager:
   - DgoneBullet
   - FxTemporaire
   - Enemy
+  - PlayerBullet
   layers:
   - Default
   - TransparentFX

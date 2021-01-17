@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     private bool _flyKeyPressed;
 
     private Animator _animator;
+    private AudioManager _audioManager;
     private PlayerBulletController _playerBulletScript;
     private Rigidbody _rigidbody;
     private Rigidbody _cameraRigidBody;
@@ -58,6 +59,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
+        _audioManager = FindObjectOfType<AudioManager>();
         _rigidbody = GetComponent<Rigidbody>();
         _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
         _boxCollider = GetComponent<BoxCollider>();
@@ -160,6 +162,8 @@ public class Player : MonoBehaviour
             var bullet = Instantiate(playerBullet, _arm.transform.position, Quaternion.identity);
             bullet.GetComponent<Rigidbody>()
                 .AddForce(gunHole.transform.forward * _playerBulletScript.Speed, ForceMode.Impulse);
+            
+            _audioManager.PlaySound("PlayerShot");
             
             var muzzle = Instantiate(muzzleFlash, gunHole.transform.position, Quaternion.identity);
             muzzle.transform.SetParent(gunHole.transform);

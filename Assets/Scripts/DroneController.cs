@@ -11,6 +11,7 @@ namespace DefaultNamespace
     public class DroneController : MonoBehaviour
     {
         public GameObject droneBullet;
+        public GameObject droneExplosion;
         public Canvas canvas;
         public float shootTimeRangeFrom;
         public float shootTimeRangeTo;
@@ -85,6 +86,8 @@ namespace DefaultNamespace
 
             if (hitPoints <= 0)
             {
+                Instantiate(droneExplosion, transform.position, transform.rotation);
+                _droneAudioManager.PlaySound("DroneExplosion");
                 Destroy(gameObject);
                 Destroy(_pointCounterGO);
                 Destroy(_imgBgCounterGO);

@@ -165,6 +165,8 @@ namespace DefaultNamespace
 
             if (hitPoints <= 0)
             {
+                Instantiate(droneExplosion, transform.position, transform.rotation);
+                _megaDroneAudioManager.PlaySound("DroneExplosion");
                 Destroy(gameObject);
                 Destroy(_pointMegaCounterGO);
                 Destroy(_imgBgMegaCounterGO);

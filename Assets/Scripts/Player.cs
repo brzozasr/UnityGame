@@ -1,69 +1,220 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Globalization;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Transform _groundCheck = null;
-    [SerializeField] private LayerMask _playerMask;
-    public GameObject _playerBullet;
-    public GameObject _gunHole;
-    public float _shotFrequency;
-    public float _jumpForce;
-    public Animation _dieAnim;
-    [SerializeField] private float _livePoints;
-    [SerializeField] private float _flyForce;
-    private float _actualLivePoints;
+    public GameObject playerBullet;
+    public GameObject gunHole;
+    public GameObject muzzleFlash;
+    public Transform groundCheck = null;
+    public LayerMask playerMask;
+    public float shotFrequency;
+    public float jumpForce;
+    public float livePoints;
+    public float flyForce;
+    
+    public int walkSpeed;
+    public int runSpeed;
+    public int resurectionDelaySec;
     
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
-    private bool _runKeyPressed = false;
+    private bool _runKeyPressed;
     private bool _dieKeyPressed;
     private bool _flyKeyPressed;
 
-    private float _horizontalInput;
+    private Animator _animator;
     private PlayerBulletController _playerBulletScript;
     private Rigidbody _rigidbody;
-    private Animator _animator;
-    private bool _lookRight;
     private Rigidbody _cameraRigidBody;
-    [SerializeField] private int WalkSpeed;
-    [SerializeField] private int RunSpeed;
-    [SerializeField] private int ResurectionDelaySec;
-    [SerializeField] private GameObject MuzzleFlash;
-    private int MoveSpeed;
     private DateTime _shotTime;
     private GameObject _arm;
     private BoxCollider _boxCollider;
+    
+    private bool _lookRight;
+    private float _actualLivePoints;
+    private float _horizontalInput;
+    private int _moveSpeed;
+
     public static event EventHandler<float> OnHit;
     public static event EventHandler OnTurn;
     public static bool Dead = false;
+    
     private Vector3 _playerBoxColliderCenter;
     private Vector3 _playerBoxColliderSize;
     private Vector3 _playerStartPosition;
+    
+    private static readonly int Die = Animator.StringToHash("die");
+    private static readonly int Shot1 = Animator.StringToHash("shot");
+    private static readonly int Jump = Animator.StringToHash("jump");
+    private static readonly int Run = Animator.StringToHash("run");
+    private static readonly int Walk = Animator.StringToHash("walk");
 
     // Start is called before the first frame update
     void Start()
     {
-        _actualLivePoints = _livePoints;
-        _shotTime = DateTime.Now;
-        _playerBulletScript = _playerBullet.GetComponent<PlayerBulletController>();
+        _animator = GetComponent<Animator>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
         _boxCollider = GetComponent<BoxCollider>();
+        
+        _actualLivePoints = livePoints;
+        _shotTime = DateTime.Now;
+        
         _playerBoxColliderCenter = _boxCollider.center;
         _playerBoxColliderSize = _boxCollider.size;
         _playerStartPosition = transform.position;
-
-        _animator = GetComponent<Animator>();
-        _rigidbody = GetComponent<Rigidbody>();
-
-        _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
         
+        _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
     }
 
     // Update is called once per frame
     void Update()
+    {
+        // Read key input
+        GetKeyState();
+        
+        if (_horizontalInput < 0 && !_lookRight)
+        {
+            transform.Rotate(Vector3.up, 180.0f);
+            _lookRight = true;
+            OnTurn?.Invoke(this, EventArgs.Empty);
+        }
+        else if (_horizontalInput > 0 && _lookRight)
+        {
+            transform.Rotate(Vector3.up, 180.0f);
+            _lookRight = false;
+            OnTurn?.Invoke(this, EventArgs.Empty);
+        }
+
+        var overlapedGameObjects = Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask).Length;
+        
+        if (_spaceKeyPressed && overlapedGameObjects > 0)
+        {
+            _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+        }
+        
+        if (_flyKeyPressed)
+        {
+            _rigidbody.AddForce(Vector3.up * (flyForce * Time.deltaTime), ForceMode.Impulse);
+        }
+
+        if (Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask).Length > 0)
+        {
+            _animator.SetBool(Jump, false);
+        }
+        
+        if (_horizontalInput != 0)
+        {
+            if (overlapedGameObjects > 0)
+            {
+                if (_runKeyPressed == false)
+                {
+                    _animator.SetBool(Walk, true);
+                    _moveSpeed = walkSpeed;
+                }
+                else
+                {
+                    _animator.SetBool(Run, true);
+                    _moveSpeed = runSpeed;
+                }
+            }
+            else
+            {
+                if (_runKeyPressed == false)
+                    _animator.SetBool(Walk, false);
+                else
+                    _animator.SetBool(Run, false);
+            }
+        }
+        else
+            if (_runKeyPressed == false)
+                _animator.SetBool(Walk, false);
+            else
+                _animator.SetBool(Run, false);
+
+        if (_spaceKeyPressed)
+            _animator.SetBool(Jump, true);
+        
+        if (_fireKeyPressed)
+        {
+            _animator.SetBool(Shot1, true);
+            Shot();
+        }
+        else
+            _animator.SetBool(Shot1, false);
+        
+        if (_dieKeyPressed)
+            _animator.SetBool(Die, false);
+    }
+
+    private void Shot()
+    {
+        
+        if ((DateTime.Now - _shotTime).Milliseconds > (1000 / shotFrequency))
+        {
+            var bullet = Instantiate(playerBullet, _arm.transform.position, Quaternion.identity);
+            bullet.GetComponent<Rigidbody>()
+                .AddForce(gunHole.transform.forward * _playerBulletScript.Speed, ForceMode.Impulse);
+            
+            var muzzle = Instantiate(muzzleFlash, gunHole.transform.position, Quaternion.identity);
+            muzzle.transform.SetParent(gunHole.transform);
+            
+            _shotTime = DateTime.Now;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        _rigidbody.velocity = new Vector3(_horizontalInput * _moveSpeed, _rigidbody.velocity.y, 0);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 9)
+        {
+            Destroy(other.gameObject);
+        }
+    }
+    
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("DgoneBullet"))
+        {
+            Debug.Log($"Live points left: {livePoints.ToString(CultureInfo.CurrentCulture)}");
+            _actualLivePoints--;
+            OnHit?.Invoke(this, _actualLivePoints / livePoints);
+        }
+
+        if (_actualLivePoints <= 0)
+        {
+            _animator.SetBool(Die, true);
+            Dead = true;
+            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
+            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+
+            StartCoroutine(Resurection());
+            Dead = false;
+        }
+    }
+
+    private IEnumerator Resurection()
+    {
+        yield return new WaitForSeconds(resurectionDelaySec);
+        
+        transform.position = _playerStartPosition;
+        _animator.SetBool(Die, false);
+        OnHit?.Invoke(this, 1.0f);
+        _actualLivePoints = livePoints;
+        _boxCollider.size = _playerBoxColliderSize;
+        _boxCollider.center = _playerBoxColliderCenter;
+    }
+
+    private void GetKeyState()
     {
         if (Input.GetKeyDown(KeyCode.Space))
             _spaceKeyPressed = true;
@@ -97,143 +248,6 @@ public class Player : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.UpArrow))
             _flyKeyPressed = false;
         
-        
         _horizontalInput = Input.GetAxis("Horizontal");
-        
-        if (_horizontalInput < 0 && !_lookRight)
-        {
-            transform.Rotate(Vector3.up, 180.0f);
-            _lookRight = true;
-            OnTurn?.Invoke(this, EventArgs.Empty);
-        }
-        else if (_horizontalInput > 0 && _lookRight)
-        {
-            transform.Rotate(Vector3.up, 180.0f);
-            _lookRight = false;
-            OnTurn?.Invoke(this, EventArgs.Empty);
-        }
-
-        var overlapedGameObjects = Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length;
-        
-        if (_spaceKeyPressed && overlapedGameObjects > 0)
-        {
-            _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
-        }
-        
-        if (_flyKeyPressed)
-        {
-            Debug.Log("fly");
-            _rigidbody.AddForce(Vector3.up * (_flyForce * Time.deltaTime), ForceMode.Impulse);
-        }
-
-        if (Physics.OverlapSphere(_groundCheck.position, 0.1f, _playerMask).Length > 0)
-        {
-            _animator.SetBool("jump", false);
-        }
-        
-        if (_horizontalInput != 0)
-        {
-            if (overlapedGameObjects > 0)
-            {
-                if (_runKeyPressed == false)
-                {
-                    _animator.SetBool("walk", true);
-                    MoveSpeed = WalkSpeed;
-                }
-                else
-                {
-                    _animator.SetBool("run", true);
-                    MoveSpeed = RunSpeed;
-                }
-            }
-            else
-            {
-                if (_runKeyPressed == false)
-                    _animator.SetBool("walk", false);
-                else
-                    _animator.SetBool("run", false);
-            }
-        }
-        else
-            if (_runKeyPressed == false)
-                _animator.SetBool("walk", false);
-            else
-                _animator.SetBool("run", false);
-
-        if (_spaceKeyPressed)
-            _animator.SetBool("jump", true);
-        
-        if (_fireKeyPressed)
-        {
-            _animator.SetBool("shot", true);
-            Shot();
-        }
-        else
-            _animator.SetBool("shot", false);
-        
-        if (_dieKeyPressed)
-            _animator.SetBool("die", false);
-    }
-
-    private void Shot()
-    {
-        
-        if ((DateTime.Now - _shotTime).Milliseconds > (1000 / _shotFrequency))
-        {
-            var bullet = Instantiate(_playerBullet, _arm.transform.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>()
-                .AddForce(_gunHole.transform.forward * _playerBulletScript.Speed, ForceMode.Impulse);
-            
-            var muzzle = Instantiate(MuzzleFlash, _gunHole.transform.position, Quaternion.identity);
-            muzzle.transform.SetParent(_gunHole.transform);
-            
-            _shotTime = DateTime.Now;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        _rigidbody.velocity = new Vector3(_horizontalInput * MoveSpeed, _rigidbody.velocity.y, 0);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 9)
-        {
-            Destroy(other.gameObject);
-        }
-    }
-    
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("DgoneBullet"))
-        {
-            Debug.Log($"Live points left: {_livePoints.ToString()}");
-            _actualLivePoints--;
-            OnHit?.Invoke(this, _actualLivePoints / _livePoints);
-        }
-
-        if (_actualLivePoints <= 0)
-        {
-            _animator.SetBool("die", true);
-            Dead = true;
-            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
-            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
-
-            StartCoroutine(Resurection());
-            Dead = false;
-        }
-    }
-
-    private IEnumerator Resurection()
-    {
-        yield return new WaitForSeconds(ResurectionDelaySec);
-        
-        transform.position = _playerStartPosition;
-        _animator.SetBool("die", false);
-        OnHit?.Invoke(this, 1.0f);
-        _actualLivePoints = _livePoints;
-        _boxCollider.size = _playerBoxColliderSize;
-        _boxCollider.center = _playerBoxColliderCenter;
     }
 }

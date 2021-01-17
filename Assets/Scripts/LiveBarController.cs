@@ -7,11 +7,9 @@ namespace DefaultNamespace
     {
         private float _liveValue;
         private Renderer _renderer;
-        private RectTransform _rectTransform;
         private GameObject _liveBar;
         private void Start()
         {
-            _rectTransform = GetComponent<RectTransform>();
             _liveBar = transform.Find("Livebar").gameObject;
             _renderer = _liveBar.GetComponent<Renderer>();
             _liveValue = 1.0f;
@@ -37,14 +35,8 @@ namespace DefaultNamespace
                 color.g = value;
             }
             
-            Debug.Log($"{color.r.ToString()} {color.g.ToString()} {color.b.ToString()}");
+            //Debug.Log($"{color.r.ToString()} {color.g.ToString()} {color.b.ToString()}");
             _renderer.material.color = color;
-        }
-
-        private void TurnBar(object sender, EventArgs args)
-        {
-            transform.Rotate(Vector3.up, 180.0f);
-            //transform.rotation = Quaternion. (transform.position, Vector3.up);
         }
     }
 }

@@ -200,6 +200,9 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(ResurectionDelaySec);
         
         transform.position = _playerStartPosition;
+        _animator.SetBool("die", false);
+        OnHit?.Invoke(this, 1.0f);
+        _actualLivePoints = _livePoints;
         _boxCollider.size = _playerBoxColliderSize;
         _boxCollider.center = _playerBoxColliderCenter;
     }

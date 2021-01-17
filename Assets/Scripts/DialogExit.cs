@@ -13,7 +13,7 @@ namespace DefaultNamespace
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (transform.position.x > -1998)
+                if (transform.position.x > -9998)
                 {
                     transform.SetParent(canvas.transform, false);
                     PauseGame();
@@ -37,7 +37,7 @@ namespace DefaultNamespace
         {
             Time.timeScale = 1;
             AudioListener.pause = false;
-            transform.position = new Vector3(-1999f, 0, 0);
+            transform.position = new Vector3(-9999f, 0, 0);
         }
 
         public void ExitGame()

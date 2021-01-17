@@ -1,7 +1,6 @@
 # Dungeon Crawl (sprint 1)
 
-## NOTES: The technical assumptions of making the game were different and much easier, 
-but the concept of making the game was completely changed. The game is written in Unity.
+## NOTES: The technical assumptions of making the game were different and much easier, but the concept of making the game was completely changed. The game is written in Unity.
 
 ## Story
 

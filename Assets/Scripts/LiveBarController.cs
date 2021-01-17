@@ -21,14 +21,14 @@ namespace DefaultNamespace
 
         private void UpdateBar(object sender, float value)
         {
-            Debug.Log(value.ToString());
+            //Debug.Log(value.ToString());
             var localScale = transform.localScale;
             transform.localScale = new Vector3(localScale.x, localScale.y, value);
 
             Color color = new Color();
             if ((1 - value) <= 0.5f)
             {
-                color.r = 1 - value;
+                color.r = (1 - value) * 2;
                 color.g = 1;
             }
             else

@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     private Rigidbody _cameraRigidBody;
     [SerializeField] private int WalkSpeed;
     [SerializeField] private int RunSpeed;
+    [SerializeField] private int ResurectionDelaySec;
     private int MoveSpeed;
     private DateTime _shotTime;
     private GameObject _arm;
@@ -38,6 +39,7 @@ public class Player : MonoBehaviour
     public static bool Dead = false;
     private Vector3 _playerBoxColliderCenter;
     private Vector3 _playerBoxColliderSize;
+    private Vector3 _playerStartPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +50,7 @@ public class Player : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider>();
         _playerBoxColliderCenter = _boxCollider.center;
         _playerBoxColliderSize = _boxCollider.size;
-        
+        _playerStartPosition = transform.position;
 
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -176,7 +178,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("DgoneBullet"))
         {
-            Debug.Log(_livePoints.ToString());
+            Debug.Log($"Live points left: {_livePoints.ToString()}");
             _actualLivePoints--;
             OnHit?.Invoke(this, _actualLivePoints / _livePoints);
         }
@@ -187,6 +189,18 @@ public class Player : MonoBehaviour
             Dead = true;
             _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
             _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+
+            StartCoroutine(Resurection());
+            Dead = false;
         }
+    }
+
+    private IEnumerator Resurection()
+    {
+        yield return new WaitForSeconds(ResurectionDelaySec);
+        
+        transform.position = _playerStartPosition;
+        _boxCollider.size = _playerBoxColliderSize;
+        _boxCollider.center = _playerBoxColliderCenter;
     }
 }

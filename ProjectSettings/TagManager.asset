@@ -12,6 +12,7 @@ TagManager:
   - DialogExit
   - FirstAidKit
   - Widget
+  - Chip
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - FirstAid
   - PlayerBullet
   - Widget
-  - 
+  - Chip
   - 
   - 
   - 

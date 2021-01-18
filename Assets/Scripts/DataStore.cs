@@ -92,5 +92,19 @@ namespace DefaultNamespace
 
             return false;
         }
+
+        internal static int GetItemQuantityFromInventory(string itemName)
+        {
+            if (Inventory.ContainsKey(itemName))
+            {
+                var quantity = Inventory[itemName];
+                if (quantity > 0)
+                {
+                    return quantity;
+                }
+            }
+
+            return 0;
+        }
     }
 }

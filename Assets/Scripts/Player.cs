@@ -56,6 +56,8 @@ public class Player : MonoBehaviour
     private static readonly int Run = Animator.StringToHash("run");
     private static readonly int Walk = Animator.StringToHash("walk");
 
+    private PhysicMaterial _boxColliderMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +66,7 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
         _boxCollider = GetComponent<BoxCollider>();
+        _boxColliderMaterial = _boxCollider.material;
         
         _actualLivePoints = livePoints;
         _shotTime = DateTime.Now;
@@ -106,11 +109,15 @@ public class Player : MonoBehaviour
             _rigidbody.AddForce(Vector3.up * (flyForce * Time.deltaTime), ForceMode.Impulse);
         }
 
-        if (Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask).Length > 0)
+        var overlaps = Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask);
+        
+        if (overlaps.Length > 0)
         {
             _animator.SetBool(Jump, false);
         }
+
         
+
         if (_horizontalInput != 0)
         {
             if (overlapedGameObjects > 0)
@@ -184,8 +191,22 @@ public class Player : MonoBehaviour
         {
             Destroy(other.gameObject);
         }
+
+        if (other.gameObject.CompareTag("Bridge"))
+        {
+            Debug.Log("tick");
+            gameObject.transform.SetParent(other.gameObject.transform);
+        }
     }
-    
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Bridge"))
+        {
+            gameObject.transform.parent = null;
+        }
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("DgoneBullet") || other.gameObject.CompareTag("Enemy"))

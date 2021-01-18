@@ -43,4 +43,116 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0fd097165c1847588e86ba905bf2336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - name: DroneShot
+    clip: {fileID: 8300000, guid: ddce8893fb58449ef98cfcc4128be2f3, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.2
+    pitch: 1.5
+    stereoPan: 0
+    spatialBlend: 0.6
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: BulletHitPlayer
+    clip: {fileID: 8300000, guid: 6c3c04d63c1df43dcb8efa4974685e82, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.28
+    pitch: 1.5
+    stereoPan: 0
+    spatialBlend: 0
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: DroneExplosion
+    clip: {fileID: 8300000, guid: 36d7c4069507643c892c30133c423d25, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.5
+    pitch: 1
+    stereoPan: 0
+    spatialBlend: 0.8
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: BackgroundMusic
+    clip: {fileID: 8300000, guid: ac3de2a63ca8f4248b2b7c6330b7c795, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 1
+    loop: 1
+    priority: 128
+    volume: 0.18
+    pitch: 1
+    stereoPan: 0
+    spatialBlend: 0
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: PlayerShot
+    clip: {fileID: 8300000, guid: 111ea862a094e9148aa0cc9ff309f338, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.18
+    pitch: 1.5
+    stereoPan: 0
+    spatialBlend: 0.6
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: TakingFirstAid
+    clip: {fileID: 8300000, guid: 9fc60031a70594531ba09d8ee321f237, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.4
+    pitch: 1
+    stereoPan: 0
+    spatialBlend: 0.6
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: CollectPoints
+    clip: {fileID: 8300000, guid: 74af96f1cbf454d889bd88c651d5d7b5, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.4
+    pitch: 1
+    stereoPan: 0
+    spatialBlend: 0.6
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: CollectChip
+    clip: {fileID: 8300000, guid: d35b808add96b460fa243cdfba8e6e5b, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.4
+    pitch: 1
+    stereoPan: 0
+    spatialBlend: 0.6
+    reverbZoneMix: 1
+    source: {fileID: 0}

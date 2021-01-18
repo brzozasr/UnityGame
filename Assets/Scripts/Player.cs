@@ -179,19 +179,18 @@ public class Player : MonoBehaviour
 
     private void CheckFallDown()
     {
-        if (transform.position.y < -5.0f)
+        if (transform.position.y < -5.0f && !Dead)
         {
             _actualLivePoints = 0;
             OnHit?.Invoke(this, _actualLivePoints/livePoints);
             
             _animator.SetBool(Die, true);
             Dead = true;
-            liveNumber--;
+            _actualLiveNumber--;
             _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
             _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
 
             StartCoroutine(Resurection());
-            Dead = false;
         }
     }
 
@@ -271,6 +270,7 @@ public class Player : MonoBehaviour
         _actualLivePoints = livePoints;
         _boxCollider.size = _playerBoxColliderSize;
         _boxCollider.center = _playerBoxColliderCenter;
+        Dead = false;
     }
 
     private void GetKeyState()

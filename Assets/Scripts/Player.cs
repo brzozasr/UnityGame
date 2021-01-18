@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     public int resurectionDelaySec;
     public int liveNumber;
 
-    private bool _spaceKeyPressed;
+    private bool _jumpKeyPressed;
     private bool _fireKeyPressed;
     private bool _runKeyPressed;
     private bool _flyKeyPressed;
@@ -118,7 +118,7 @@ public class Player : MonoBehaviour
 
         var overlapedGameObjects = Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask).Length;
 
-        if (_spaceKeyPressed && overlapedGameObjects > 0)
+        if (_jumpKeyPressed && overlapedGameObjects > 0)
         {
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
@@ -163,7 +163,7 @@ public class Player : MonoBehaviour
         else
             _animator.SetBool(Run, false);
 
-        if (_spaceKeyPressed)
+        if (_jumpKeyPressed)
             _animator.SetBool(Jump, true);
 
         if (_fireKeyPressed)
@@ -276,20 +276,20 @@ public class Player : MonoBehaviour
     private void GetKeyState()
     {
         if (Input.GetKeyDown(KeyCode.W))
-            _spaceKeyPressed = true;
+            _jumpKeyPressed = true;
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            _spaceKeyPressed = false;
+            _jumpKeyPressed = false;
             _fireKeyPressed = true;
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             _fireKeyPressed = false;
-            _spaceKeyPressed = false;
+            _jumpKeyPressed = false;
         }
         else
         {
-            _spaceKeyPressed = false;
+            _jumpKeyPressed = false;
         }
 
         if (Input.GetKeyDown(KeyCode.R))

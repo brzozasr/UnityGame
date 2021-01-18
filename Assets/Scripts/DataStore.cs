@@ -51,5 +51,12 @@ namespace DefaultNamespace
             
             return HpPoints;
         }
+
+        internal static int AddPointsToScore(int collectedPoints)
+        {
+            int score = Score + collectedPoints;
+            Score = score;
+            return score;
+        }
     }
 }

@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
     private bool _runKeyPressed;
-    private bool _dieKeyPressed;
     private bool _flyKeyPressed;
 
     private Animator _animator;
@@ -157,9 +156,26 @@ public class Player : MonoBehaviour
         }
         else
             _animator.SetBool(Shot1, false);
-        
-        if (_dieKeyPressed)
-            _animator.SetBool(Die, false);
+
+        CheckFallDown();
+    }
+
+    private void CheckFallDown()
+    {
+        if (transform.position.y < -5.0f)
+        {
+            _actualLivePoints = 0;
+            OnHit?.Invoke(this, _actualLivePoints/livePoints);
+            
+            _animator.SetBool(Die, true);
+            Dead = true;
+            liveNumber--;
+            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
+            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+
+            StartCoroutine(Resurection());
+            Dead = false;
+        }
     }
 
     private void Shot()
@@ -243,7 +259,7 @@ public class Player : MonoBehaviour
 
     private void GetKeyState()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.W))
             _spaceKeyPressed = true;
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -265,9 +281,6 @@ public class Player : MonoBehaviour
                 _runKeyPressed = true;
             else
                 _runKeyPressed = false;
-
-        if (Input.GetKeyDown(KeyCode.D))
-            _dieKeyPressed = true;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
             _flyKeyPressed = true;

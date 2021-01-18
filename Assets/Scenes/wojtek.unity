@@ -834,6 +834,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 13400000, guid: 155f12c88ff6d026aa9890a3339f46e5,
         type: 2}
+    - target: {fileID: 1335907617, guid: c639800023ff9058ea0eab066fd8b114, type: 3}
+      propertyPath: livePoints
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6129558820902416196, guid: c639800023ff9058ea0eab066fd8b114,
         type: 3}
       propertyPath: m_RootOrder

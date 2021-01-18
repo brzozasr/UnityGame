@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 4996317742904552274}
   - component: {fileID: 4996317742896792756}
   - component: {fileID: 4996317742923546612}
+  - component: {fileID: -8928744760434171009}
   m_Layer: 0
   m_Name: BlockBrick2
   m_TagString: Untagged
@@ -160,6 +161,19 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4996317742906452400}
   m_Enabled: 1
+--- !u!65 &-8928744760434171009
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996317742904194930}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4996317742904194932
 GameObject:
   m_ObjectHideFlags: 0

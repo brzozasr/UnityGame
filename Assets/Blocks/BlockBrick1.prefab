@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4308982648903463447}
   - component: {fileID: 4308982648893491543}
   m_Layer: 0
-  m_Name: block_brick_black_1
+  m_Name: BlockBrick1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4308982648910840273}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.4431787, y: 1.4184436, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4308982648910421495}

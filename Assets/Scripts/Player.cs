@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     public int runSpeed;
     public int resurectionDelaySec;
     public int liveNumber;
-    
+
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
     private bool _runKeyPressed;
@@ -36,8 +36,9 @@ public class Player : MonoBehaviour
     private DateTime _shotTime;
     private GameObject _arm;
     private BoxCollider _boxCollider;
-    
+
     private bool _lookRight;
+    private int _actualLiveNumber;
     private float _actualLivePoints;
     private float _horizontalInput;
     private int _moveSpeed;
@@ -45,11 +46,11 @@ public class Player : MonoBehaviour
     public static event EventHandler<float> OnHit;
     public static event EventHandler OnTurn;
     public static bool Dead = false;
-    
+
     private Vector3 _playerBoxColliderCenter;
     private Vector3 _playerBoxColliderSize;
     private Vector3 _playerStartPosition;
-    
+
     private static readonly int Die = Animator.StringToHash("die");
     private static readonly int Shot1 = Animator.StringToHash("shot");
     private static readonly int Jump = Animator.StringToHash("jump");
@@ -64,23 +65,42 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
         _boxCollider = GetComponent<BoxCollider>();
-        
+
         _actualLivePoints = livePoints;
         _shotTime = DateTime.Now;
-        
+
         _playerBoxColliderCenter = _boxCollider.center;
         _playerBoxColliderSize = _boxCollider.size;
         _playerStartPosition = transform.position;
-        
+
         _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
+
+        // Initiate start HP points
+        DataStore.StartHpPoints = (int) livePoints;
+        DataStore.SetCurrentHpPoints((int) livePoints);
+        FirstAidKitController.OnFirstAidCollected += RecalculateHpPoints;
+        // Initiate number of lives
+        _actualLiveNumber = liveNumber;
+        DataStore.StartLives = liveNumber;
+        DataStore.SetCurrentLives(liveNumber);
+    }
+
+    private void RecalculateHpPoints(int hpPoints)
+    {
+        _actualLivePoints = DataStore.AddHpPoints(hpPoints);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Update HP points
+        DataStore.SetCurrentHpPoints((int) _actualLivePoints);
+        // Update number of lives
+        DataStore.SetCurrentLives(_actualLiveNumber);
+
         // Read key input
         GetKeyState();
-        
+
         if (_horizontalInput < 0 && !_lookRight)
         {
             transform.Rotate(Vector3.up, 180.0f);
@@ -95,12 +115,12 @@ public class Player : MonoBehaviour
         }
 
         var overlapedGameObjects = Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask).Length;
-        
+
         if (_spaceKeyPressed && overlapedGameObjects > 0)
         {
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
-        
+
         if (_flyKeyPressed)
         {
             _rigidbody.AddForce(Vector3.up * (flyForce * Time.deltaTime), ForceMode.Impulse);
@@ -110,7 +130,7 @@ public class Player : MonoBehaviour
         {
             _animator.SetBool(Jump, false);
         }
-        
+
         if (_horizontalInput != 0)
         {
             if (overlapedGameObjects > 0)
@@ -134,15 +154,14 @@ public class Player : MonoBehaviour
                     _animator.SetBool(Run, false);
             }
         }
+        else if (_runKeyPressed == false)
+            _animator.SetBool(Walk, false);
         else
-            if (_runKeyPressed == false)
-                _animator.SetBool(Walk, false);
-            else
-                _animator.SetBool(Run, false);
+            _animator.SetBool(Run, false);
 
         if (_spaceKeyPressed)
             _animator.SetBool(Jump, true);
-        
+
         if (_fireKeyPressed)
         {
             _animator.SetBool(Shot1, true);
@@ -150,25 +169,24 @@ public class Player : MonoBehaviour
         }
         else
             _animator.SetBool(Shot1, false);
-        
+
         if (_dieKeyPressed)
             _animator.SetBool(Die, false);
     }
 
     private void Shot()
     {
-        
         if ((DateTime.Now - _shotTime).Milliseconds > (1000 / shotFrequency))
         {
             var bullet = Instantiate(playerBullet, _arm.transform.position, Quaternion.identity);
             bullet.GetComponent<Rigidbody>()
                 .AddForce(gunHole.transform.forward * _playerBulletScript.Speed, ForceMode.Impulse);
-            
+
             _audioManager.PlaySound("PlayerShot");
-            
+
             var muzzle = Instantiate(muzzleFlash, gunHole.transform.position, Quaternion.identity);
             muzzle.transform.SetParent(gunHole.transform);
-            
+
             _shotTime = DateTime.Now;
         }
     }
@@ -185,7 +203,7 @@ public class Player : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
-    
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("DgoneBullet") || other.gameObject.CompareTag("Enemy"))
@@ -199,7 +217,7 @@ public class Player : MonoBehaviour
         {
             _animator.SetBool(Die, true);
             Dead = true;
-            liveNumber--;
+            _actualLiveNumber--;
             _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
             _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
 
@@ -211,7 +229,7 @@ public class Player : MonoBehaviour
     private IEnumerator Resurection()
     {
         yield return new WaitForSeconds(resurectionDelaySec);
-        
+
         transform.position = _playerStartPosition;
         _animator.SetBool(Die, false);
         OnHit?.Invoke(this, 1.0f);
@@ -250,10 +268,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
             _flyKeyPressed = true;
-        
+
         if (Input.GetKeyUp(KeyCode.UpArrow))
             _flyKeyPressed = false;
-        
+
         _horizontalInput = Input.GetAxis("Horizontal");
     }
 }

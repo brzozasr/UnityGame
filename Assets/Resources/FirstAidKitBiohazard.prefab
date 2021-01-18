@@ -121,4 +121,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7e944f1cd3a419eabee24a0447e7e48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPointRecovery: 1
+  hitPointRecovery: 40

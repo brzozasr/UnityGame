@@ -6,7 +6,7 @@ namespace DefaultNamespace
     public class FirstAidKitController : MonoBehaviour
     {
         [Range(1, 150)]
-        public int hitPointRecovery = 1;
+        public int hitPointRecovery;
         public static event Action<int> OnFirstAidCollected;
 
         private void Update()
@@ -19,7 +19,8 @@ namespace DefaultNamespace
             if (other.gameObject.CompareTag("Player"))
             {
                 FindObjectOfType<AudioManager>().PlaySound("TakingFirstAid");
-                OnFirstAidCollected?.Invoke(hitPointRecovery);
+                int hp = DataStore.AddHpPoints(hitPointRecovery);
+                OnFirstAidCollected?.Invoke(hp);
                 Destroy(gameObject);
             }
         }

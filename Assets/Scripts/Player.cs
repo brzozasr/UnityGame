@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
     private bool _spaceKeyPressed;
     private bool _fireKeyPressed;
     private bool _runKeyPressed;
-    private bool _dieKeyPressed;
     private bool _flyKeyPressed;
 
     private Animator _animator;
@@ -57,6 +56,8 @@ public class Player : MonoBehaviour
     private static readonly int Run = Animator.StringToHash("run");
     private static readonly int Walk = Animator.StringToHash("walk");
 
+    private PhysicMaterial _boxColliderMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,7 +66,8 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
         _boxCollider = GetComponent<BoxCollider>();
-
+        _boxColliderMaterial = _boxCollider.material;
+        
         _actualLivePoints = livePoints;
         _shotTime = DateTime.Now;
 
@@ -126,7 +128,9 @@ public class Player : MonoBehaviour
             _rigidbody.AddForce(Vector3.up * (flyForce * Time.deltaTime), ForceMode.Impulse);
         }
 
-        if (Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask).Length > 0)
+        var overlaps = Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask);
+        
+        if (overlaps.Length > 0)
         {
             _animator.SetBool(Jump, false);
         }
@@ -170,8 +174,25 @@ public class Player : MonoBehaviour
         else
             _animator.SetBool(Shot1, false);
 
-        if (_dieKeyPressed)
-            _animator.SetBool(Die, false);
+        CheckFallDown();
+    }
+
+    private void CheckFallDown()
+    {
+        if (transform.position.y < -5.0f)
+        {
+            _actualLivePoints = 0;
+            OnHit?.Invoke(this, _actualLivePoints/livePoints);
+            
+            _animator.SetBool(Die, true);
+            Dead = true;
+            liveNumber--;
+            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
+            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+
+            StartCoroutine(Resurection());
+            Dead = false;
+        }
     }
 
     private void Shot()
@@ -201,6 +222,20 @@ public class Player : MonoBehaviour
         if (other.gameObject.layer == 9)
         {
             Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.CompareTag("Bridge"))
+        {
+            Debug.Log("tick");
+            gameObject.transform.SetParent(other.gameObject.transform);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Bridge"))
+        {
+            gameObject.transform.parent = null;
         }
     }
 
@@ -240,7 +275,7 @@ public class Player : MonoBehaviour
 
     private void GetKeyState()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.W))
             _spaceKeyPressed = true;
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -262,9 +297,6 @@ public class Player : MonoBehaviour
                 _runKeyPressed = true;
             else
                 _runKeyPressed = false;
-
-        if (Input.GetKeyDown(KeyCode.D))
-            _dieKeyPressed = true;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
             _flyKeyPressed = true;

@@ -13,6 +13,7 @@ TagManager:
   - FirstAidKit
   - Widget
   - Chip
+  - Bridge
   layers:
   - Default
   - TransparentFX

@@ -12,7 +12,7 @@ namespace DefaultNamespace
         
         internal static int Score { get; set; }
 
-        internal static List<string> VirtualKey = new List<string>();
+        internal static Dictionary<string, int> Inventory = new Dictionary<string, int>();
 
         /// <summary>
         /// Method for current updating HP points.
@@ -57,6 +57,40 @@ namespace DefaultNamespace
             int score = Score + collectedPoints;
             Score = score;
             return score;
+        }
+
+        internal static void AddItemToInventory(string itemName, int itemQuantity)
+        {
+            if (Inventory.ContainsKey(itemName))
+            {
+                var quantity = Inventory[itemName];
+                Inventory[itemName] = quantity + itemQuantity;
+            }
+            else
+            {
+                Inventory.Add(itemName, itemQuantity);
+            }
+        }
+
+        internal static void ClearInventory()
+        {
+            Inventory.Clear();
+        }
+
+        internal static bool GetOneItemFromInventory(string itemName)
+        {
+            if (Inventory.ContainsKey(itemName))
+            {
+                var quantity = Inventory[itemName];
+                if (quantity > 0)
+                {
+                    quantity -= 1;
+                    Inventory[itemName] = quantity;
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -9,6 +9,8 @@ namespace DefaultNamespace
         public int hitPointRecovery;
         public static event Action<int> OnFirstAidCollected;
 
+        private int i = 0;
+        
         private void Update()
         {
             transform.Rotate(Vector3.up, 100.0f * Time.deltaTime);
@@ -19,8 +21,7 @@ namespace DefaultNamespace
             if (other.gameObject.CompareTag("Player"))
             {
                 FindObjectOfType<AudioManager>().PlaySound("TakingFirstAid");
-                int hp = DataStore.AddHpPoints(hitPointRecovery);
-                OnFirstAidCollected?.Invoke(hp);
+                OnFirstAidCollected?.Invoke(hitPointRecovery);
                 Destroy(gameObject);
             }
         }

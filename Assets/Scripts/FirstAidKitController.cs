@@ -19,8 +19,7 @@ namespace DefaultNamespace
             if (other.gameObject.CompareTag("Player"))
             {
                 FindObjectOfType<AudioManager>().PlaySound("TakingFirstAid");
-                int hp = DataStore.AddHpPoints(hitPointRecovery);
-                OnFirstAidCollected?.Invoke(hp);
+                OnFirstAidCollected?.Invoke(hitPointRecovery);
                 Destroy(gameObject);
             }
         }

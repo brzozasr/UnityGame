@@ -29,6 +29,7 @@ namespace DefaultNamespace
             spotLight.GetComponent<Light>().color = Color.green;
 		
             _doorAnimation.Play("open");
+            FindObjectOfType<AudioManager>().PlaySound("DoorOpen");
         }
     }
 }

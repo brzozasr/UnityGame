@@ -235,7 +235,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 567
   shotFrequency: 4
-  jumpForce: 5
+  jumpForce: 8
   livePoints: 5
   flyForce: 15
   walkSpeed: 1

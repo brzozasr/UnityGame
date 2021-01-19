@@ -91,6 +91,7 @@ public class Player : MonoBehaviour
     private void RecalculateHpPoints(int hpPoints)
     {
         _actualLivePoints = DataStore.AddHpPoints(hpPoints);
+        OnHit?.Invoke(this, _actualLivePoints / livePoints);
     }
 
     // Update is called once per frame
@@ -229,7 +230,7 @@ public class Player : MonoBehaviour
             gameObject.transform.SetParent(other.gameObject.transform);
         }
 
-        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("MajorKey") > 0)
+        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip") > 0)
         {
             Debug.Log("Enter");
             OnPlatformEnter?.Invoke(this, EventArgs.Empty);

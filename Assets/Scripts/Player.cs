@@ -90,6 +90,7 @@ public class Player : MonoBehaviour
     private void RecalculateHpPoints(int hpPoints)
     {
         _actualLivePoints = DataStore.AddHpPoints(hpPoints);
+        OnHit?.Invoke(this, _actualLivePoints / livePoints);
     }
 
     // Update is called once per frame

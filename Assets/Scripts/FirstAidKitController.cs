@@ -9,8 +9,6 @@ namespace DefaultNamespace
         public int hitPointRecovery;
         public static event Action<int> OnFirstAidCollected;
 
-        private int i = 0;
-        
         private void Update()
         {
             transform.Rotate(Vector3.up, 100.0f * Time.deltaTime);

@@ -13,6 +13,9 @@ TagManager:
   - FirstAidKit
   - Widget
   - Chip
+  - Bridge
+  - SF_Door
+  - DoorPlatform
   layers:
   - Default
   - TransparentFX

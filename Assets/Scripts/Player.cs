@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     private int _moveSpeed;
 
     public static event EventHandler<float> OnHit;
+    public static event EventHandler OnPlatformEnter;
     public static event EventHandler OnTurn;
     public static bool Dead = false;
 
@@ -225,8 +226,13 @@ public class Player : MonoBehaviour
 
         if (other.gameObject.CompareTag("Bridge"))
         {
-            Debug.Log("tick");
             gameObject.transform.SetParent(other.gameObject.transform);
+        }
+
+        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("MajorKey") > 0)
+        {
+            Debug.Log("Enter");
+            OnPlatformEnter?.Invoke(this, EventArgs.Empty);
         }
     }
 

@@ -34,6 +34,11 @@ namespace DefaultNamespace
 
                 _doorAnimation.Play("open");
                 FindObjectOfType<AudioManager>().PlaySound("DoorOpen");
+
+                if (chip.Equals("Chip2"))
+                {
+                    DataStore.IsWonGameOver = true;
+                }
             }
         }
     }

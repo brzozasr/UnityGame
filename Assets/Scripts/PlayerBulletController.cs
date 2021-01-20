@@ -22,11 +22,9 @@ namespace DefaultNamespace
                 FindObjectOfType<AudioManager>().PlaySound("BulletHitPlayer");
                 Destroy(gameObject);
             }
-
+            
             if (!other.gameObject.CompareTag("Player"))
-            {
                 Destroy(gameObject);
-            }
         }
     }
 }

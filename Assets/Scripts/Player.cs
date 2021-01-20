@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     public int resurectionDelaySec;
     public int liveNumber;
 
-    private bool _spaceKeyPressed;
+    private bool _jumpKeyPressed;
     private bool _fireKeyPressed;
     private bool _runKeyPressed;
     private bool _flyKeyPressed;
@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
     private Rigidbody _cameraRigidBody;
     private DateTime _shotTime;
     private GameObject _arm;
-    private BoxCollider _boxCollider;
+    private CapsuleCollider _capsuleCollider;
 
     private bool _lookRight;
     private int _actualLiveNumber;
@@ -43,11 +43,12 @@ public class Player : MonoBehaviour
     private int _moveSpeed;
 
     public static event EventHandler<float> OnHit;
+    public static event EventHandler<string> OnPlatformEnter;
     public static event EventHandler OnTurn;
     public static bool Dead = false;
 
     private Vector3 _playerBoxColliderCenter;
-    private Vector3 _playerBoxColliderSize;
+    private float _playerCapsuleColliderHeight;
     private Vector3 _playerStartPosition;
 
     private static readonly int Die = Animator.StringToHash("die");
@@ -65,14 +66,14 @@ public class Player : MonoBehaviour
         _audioManager = FindObjectOfType<AudioManager>();
         _rigidbody = GetComponent<Rigidbody>();
         _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
-        _boxCollider = GetComponent<BoxCollider>();
-        _boxColliderMaterial = _boxCollider.material;
+        _capsuleCollider = GetComponent<CapsuleCollider>();
+        _boxColliderMaterial = _capsuleCollider.material;
         
         _actualLivePoints = livePoints;
         _shotTime = DateTime.Now;
 
-        _playerBoxColliderCenter = _boxCollider.center;
-        _playerBoxColliderSize = _boxCollider.size;
+        _playerBoxColliderCenter = _capsuleCollider.center;
+        _playerCapsuleColliderHeight = _capsuleCollider.height;
         _playerStartPosition = transform.position;
 
         _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
@@ -119,7 +120,7 @@ public class Player : MonoBehaviour
 
         var overlapedGameObjects = Physics.OverlapSphere(groundCheck.position, 0.1f, playerMask).Length;
 
-        if (_spaceKeyPressed && overlapedGameObjects > 0)
+        if (_jumpKeyPressed && overlapedGameObjects > 0)
         {
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
@@ -164,7 +165,7 @@ public class Player : MonoBehaviour
         else
             _animator.SetBool(Run, false);
 
-        if (_spaceKeyPressed)
+        if (_jumpKeyPressed)
             _animator.SetBool(Jump, true);
 
         if (_fireKeyPressed)
@@ -188,8 +189,8 @@ public class Player : MonoBehaviour
             _animator.SetBool(Die, true);
             Dead = true;
             _actualLiveNumber--;
-            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
-            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+            _capsuleCollider.height = 0.2f;
+            _capsuleCollider.center = new Vector3(_capsuleCollider.center.x, 0.0f, _capsuleCollider.center.z);
 
             StartCoroutine(Resurection());
         }
@@ -226,8 +227,19 @@ public class Player : MonoBehaviour
 
         if (other.gameObject.CompareTag("Bridge"))
         {
-            Debug.Log("tick");
             gameObject.transform.SetParent(other.gameObject.transform);
+        }
+
+        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip2") > 0)
+        {
+            Debug.Log("Enter");
+            OnPlatformEnter?.Invoke(this, "Chip2");
+        }
+        
+        if (other.gameObject.CompareTag("HorizontalDoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip1") > 0)
+        {
+            Debug.Log("Enter");
+            OnPlatformEnter?.Invoke(this, "Chip1");
         }
     }
 
@@ -253,8 +265,8 @@ public class Player : MonoBehaviour
             _animator.SetBool(Die, true);
             Dead = true;
             _actualLiveNumber--;
-            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
-            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+            _capsuleCollider.height = 0.2f;
+            _capsuleCollider.center = new Vector3(_capsuleCollider.center.x, 0.0f, _capsuleCollider.center.z);
 
             StartCoroutine(Resurection());
             Dead = false;
@@ -269,28 +281,28 @@ public class Player : MonoBehaviour
         _animator.SetBool(Die, false);
         OnHit?.Invoke(this, 1.0f);
         _actualLivePoints = livePoints;
-        _boxCollider.size = _playerBoxColliderSize;
-        _boxCollider.center = _playerBoxColliderCenter;
+        _capsuleCollider.height = _playerCapsuleColliderHeight;
+        _capsuleCollider.center = _playerBoxColliderCenter;
         Dead = false;
     }
 
     private void GetKeyState()
     {
         if (Input.GetKeyDown(KeyCode.W))
-            _spaceKeyPressed = true;
+            _jumpKeyPressed = true;
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            _spaceKeyPressed = false;
+            _jumpKeyPressed = false;
             _fireKeyPressed = true;
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             _fireKeyPressed = false;
-            _spaceKeyPressed = false;
+            _jumpKeyPressed = false;
         }
         else
         {
-            _spaceKeyPressed = false;
+            _jumpKeyPressed = false;
         }
 
         if (Input.GetKeyDown(KeyCode.R))

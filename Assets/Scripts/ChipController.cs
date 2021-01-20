@@ -18,7 +18,6 @@ namespace DefaultNamespace
             {
                 FindObjectOfType<AudioManager>().PlaySound("CollectChip");
                 DataStore.AddItemToInventory(itemName, itemQuantity);
-                DataStore.IsLevelOver = true;
                 Destroy(gameObject);
             }
         }

@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level1.unity
     guid: e56f1d0bd8609a3eda8585a83d03ed67
+  - enabled: 1
+    path: Assets/Scenes/wojtek.unity
+    guid: c1b29be276d10fcf58096d8e2c35549e
   m_configObjects: {}

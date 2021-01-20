@@ -9,11 +9,25 @@ namespace DefaultNamespace
         internal static int StartLives { get; set; }
         public static int HpPoints { get; private set; }
         internal static int StartHpPoints { get; set; }
-        
         internal static int Score { get; set; }
+        internal static bool IsWonGameOver { get; set; }
+        internal static bool IsLevelOver { get; set; }
+        
 
         internal static Dictionary<string, int> Inventory = new Dictionary<string, int>();
 
+        internal static void Clear()
+        {
+            Lives = 0;
+            StartLives = 0;
+            HpPoints = 0;
+            StartHpPoints = 0;
+            Score = 0;
+            ClearInventory();
+            IsWonGameOver = false;
+            IsLevelOver = false;
+        }
+        
         /// <summary>
         /// Method for current updating HP points.
         /// </summary>

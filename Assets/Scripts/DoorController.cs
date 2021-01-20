@@ -1,35 +1,40 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DefaultNamespace
 {
-    public class DoorController : MonoBehaviour
+    public class DoorController : MonoBehaviour, IDoorController
     {
-        public Material GreenLight;
-        public Material RedLight;
-        public GameObject Door;
-        public Transform DoorPlatform;
+        public string compatibleChipName;
+        public Material greenLight;
+        public Material redLight;
+        public GameObject door;
+        public Transform doorPlatform;
+        
 
         private Animation _doorAnimation;
-        private bool _openPrevState;
 
         private void Start()
         {
-            _doorAnimation = Door.GetComponent<Animation>();
+            _doorAnimation = door.GetComponent<Animation>();
             Player.OnPlatformEnter += OpenDoor;
         }
 
-        private void OpenDoor(object sender, EventArgs args)
+        public void OpenDoor(object sender, string chip)
         {
-            var sphere = DoorPlatform.GetChild(0);
-            var spotLight = DoorPlatform.GetChild(1);
+            if (compatibleChipName.Equals(chip))
+            {
+                var sphere = doorPlatform.GetChild(0);
+                var spotLight = doorPlatform.GetChild(1);
 
-            sphere.GetComponent<Renderer>().material = GreenLight;
-		
-            spotLight.GetComponent<Light>().color = Color.green;
-		
-            _doorAnimation.Play("open");
-            FindObjectOfType<AudioManager>().PlaySound("DoorOpen");
+                sphere.GetComponent<Renderer>().material = greenLight;
+
+                spotLight.GetComponent<Light>().color = Color.green;
+
+                _doorAnimation.Play("open");
+                FindObjectOfType<AudioManager>().PlaySound("DoorOpen");
+            }
         }
     }
 }

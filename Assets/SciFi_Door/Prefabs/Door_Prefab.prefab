@@ -47,10 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dabf31105d445c1bbcf2fe8951e34c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GreenLight: {fileID: 2100000, guid: 7d3fefd038a4e0160bdc290dc71d6b02, type: 2}
-  RedLight: {fileID: 2100000, guid: d02fad746dbcd7f0aab759845fd0a7ac, type: 2}
-  Door: {fileID: 100008}
-  DoorPlatform: {fileID: 1638334220}
+  compatibleChipName: Chip2
+  greenLight: {fileID: 2100000, guid: 7d3fefd038a4e0160bdc290dc71d6b02, type: 2}
+  redLight: {fileID: 2100000, guid: d02fad746dbcd7f0aab759845fd0a7ac, type: 2}
+  door: {fileID: 100008}
+  doorPlatform: {fileID: 1638334220}
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0

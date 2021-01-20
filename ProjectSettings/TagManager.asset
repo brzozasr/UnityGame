@@ -16,6 +16,7 @@ TagManager:
   - Bridge
   - SF_Door
   - DoorPlatform
+  - HorizontalDoorPlatform
   layers:
   - Default
   - TransparentFX

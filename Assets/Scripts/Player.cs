@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
     private Rigidbody _cameraRigidBody;
     private DateTime _shotTime;
     private GameObject _arm;
-    private BoxCollider _boxCollider;
+    private CapsuleCollider _capsuleCollider;
 
     private bool _lookRight;
     private int _actualLiveNumber;
@@ -43,12 +43,12 @@ public class Player : MonoBehaviour
     private int _moveSpeed;
 
     public static event EventHandler<float> OnHit;
-    public static event EventHandler OnPlatformEnter;
+    public static event EventHandler<string> OnPlatformEnter;
     public static event EventHandler OnTurn;
     public static bool Dead = false;
 
     private Vector3 _playerBoxColliderCenter;
-    private Vector3 _playerBoxColliderSize;
+    private float _playerCapsuleColliderHeight;
     private Vector3 _playerStartPosition;
 
     private static readonly int Die = Animator.StringToHash("die");
@@ -66,14 +66,14 @@ public class Player : MonoBehaviour
         _audioManager = FindObjectOfType<AudioManager>();
         _rigidbody = GetComponent<Rigidbody>();
         _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
-        _boxCollider = GetComponent<BoxCollider>();
-        _boxColliderMaterial = _boxCollider.material;
+        _capsuleCollider = GetComponent<CapsuleCollider>();
+        _boxColliderMaterial = _capsuleCollider.material;
         
         _actualLivePoints = livePoints;
         _shotTime = DateTime.Now;
 
-        _playerBoxColliderCenter = _boxCollider.center;
-        _playerBoxColliderSize = _boxCollider.size;
+        _playerBoxColliderCenter = _capsuleCollider.center;
+        _playerCapsuleColliderHeight = _capsuleCollider.height;
         _playerStartPosition = transform.position;
 
         _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
@@ -189,8 +189,8 @@ public class Player : MonoBehaviour
             _animator.SetBool(Die, true);
             Dead = true;
             _actualLiveNumber--;
-            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
-            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+            _capsuleCollider.height = 0.2f;
+            _capsuleCollider.center = new Vector3(_capsuleCollider.center.x, 0.0f, _capsuleCollider.center.z);
 
             StartCoroutine(Resurection());
         }
@@ -230,10 +230,16 @@ public class Player : MonoBehaviour
             gameObject.transform.SetParent(other.gameObject.transform);
         }
 
-        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip") > 0)
+        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip2") > 0)
         {
             Debug.Log("Enter");
-            OnPlatformEnter?.Invoke(this, EventArgs.Empty);
+            OnPlatformEnter?.Invoke(this, "Chip2");
+        }
+        
+        if (other.gameObject.CompareTag("HorizontalDoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip1") > 0)
+        {
+            Debug.Log("Enter");
+            OnPlatformEnter?.Invoke(this, "Chip1");
         }
     }
 
@@ -259,8 +265,8 @@ public class Player : MonoBehaviour
             _animator.SetBool(Die, true);
             Dead = true;
             _actualLiveNumber--;
-            _boxCollider.size = new Vector3(_boxCollider.size.x, 0.0f, _boxCollider.size.z);
-            _boxCollider.center = new Vector3(_boxCollider.center.x, 0.0f, _boxCollider.center.z);
+            _capsuleCollider.height = 0.2f;
+            _capsuleCollider.center = new Vector3(_capsuleCollider.center.x, 0.0f, _capsuleCollider.center.z);
 
             StartCoroutine(Resurection());
             Dead = false;
@@ -275,8 +281,8 @@ public class Player : MonoBehaviour
         _animator.SetBool(Die, false);
         OnHit?.Invoke(this, 1.0f);
         _actualLivePoints = livePoints;
-        _boxCollider.size = _playerBoxColliderSize;
-        _boxCollider.center = _playerBoxColliderCenter;
+        _capsuleCollider.height = _playerCapsuleColliderHeight;
+        _capsuleCollider.center = _playerBoxColliderCenter;
         Dead = false;
     }
 

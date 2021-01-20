@@ -59,9 +59,15 @@ public class Player : MonoBehaviour
 
     private PhysicMaterial _boxColliderMaterial;
 
+    private void Awake()
+    {
+        OnHit = null;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        Dead = false;
         _animator = GetComponent<Animator>();
         _audioManager = FindObjectOfType<AudioManager>();
         _rigidbody = GetComponent<Rigidbody>();

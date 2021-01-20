@@ -12,11 +12,12 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            Player.OnHit += UpdateBar;
+            
         }
 
         private void Start()
         {
+            Player.OnHit += UpdateBar;
             _backgroud = transform.parent.Find("LivebarBackground").gameObject;
             _liveBar = transform.Find("Livebar").gameObject;
             _renderer = _backgroud.GetComponent<Renderer>();

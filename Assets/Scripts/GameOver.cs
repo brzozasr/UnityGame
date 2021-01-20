@@ -84,7 +84,7 @@ namespace DefaultNamespace
         public void PlayAgain()
         {
             DataStore.Clear();
-            transform.parent = null;
+            //transform.parent = null;
             _isRunOnce = false;
             SceneManager.LoadScene(1);
             Time.timeScale = 1;

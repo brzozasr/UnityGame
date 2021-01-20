@@ -88,7 +88,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: BackgroundMusic
     clip: {fileID: 8300000, guid: ac3de2a63ca8f4248b2b7c6330b7c795, type: 3}
-    mute: 0
+    mute: 1
     bypassEffects: 0
     bypassListenerEffects: 0
     playOnAwake: 1
@@ -151,6 +151,34 @@ MonoBehaviour:
     loop: 0
     priority: 128
     volume: 0.4
+    pitch: 1
+    stereoPan: 0
+    spatialBlend: 0.6
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: DoorOpen
+    clip: {fileID: 8300000, guid: 959525e3b01084e8d82024f2427ce878, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 1
+    pitch: 1
+    stereoPan: 0
+    spatialBlend: 0.6
+    reverbZoneMix: 1
+    source: {fileID: 0}
+  - name: GameOver
+    clip: {fileID: 8300000, guid: 5790de566a7b7a8728c30f1502fde8a4, type: 3}
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    playOnAwake: 0
+    loop: 0
+    priority: 128
+    volume: 0.5
     pitch: 1
     stereoPan: 0
     spatialBlend: 0.6

@@ -188,6 +188,7 @@ public class Player : MonoBehaviour
             
             _animator.SetBool(Die, true);
             Dead = true;
+            Debug.Log("err");
             _actualLiveNumber--;
             _capsuleCollider.height = 0.2f;
             _capsuleCollider.center = new Vector3(_capsuleCollider.center.x, 0.0f, _capsuleCollider.center.z);
@@ -253,14 +254,14 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("DgoneBullet") || other.gameObject.CompareTag("Enemy"))
+        if (!Dead && other.gameObject.CompareTag("DgoneBullet") || other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log($"Live points left: {livePoints.ToString(CultureInfo.CurrentCulture)}");
+            Debug.Log($"Live points left: {_actualLivePoints.ToString(CultureInfo.CurrentCulture)}");
             _actualLivePoints--;
             OnHit?.Invoke(this, _actualLivePoints / livePoints);
         }
 
-        if (_actualLivePoints <= 0)
+        if (_actualLivePoints <= 0 && !Dead)
         {
             _animator.SetBool(Die, true);
             Dead = true;
@@ -269,7 +270,6 @@ public class Player : MonoBehaviour
             _capsuleCollider.center = new Vector3(_capsuleCollider.center.x, 0.0f, _capsuleCollider.center.z);
 
             StartCoroutine(Resurection());
-            Dead = false;
         }
     }
 

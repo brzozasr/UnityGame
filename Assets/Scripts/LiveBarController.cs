@@ -9,13 +9,18 @@ namespace DefaultNamespace
         private Renderer _renderer;
         private GameObject _liveBar;
         private GameObject _backgroud;
+
+        private void Awake()
+        {
+            Player.OnHit += UpdateBar;
+        }
+
         private void Start()
         {
             _backgroud = transform.parent.Find("LivebarBackground").gameObject;
             _liveBar = transform.Find("Livebar").gameObject;
             _renderer = _backgroud.GetComponent<Renderer>();
             _liveValue = 1.0f;
-            Player.OnHit += UpdateBar;
             //Player.OnTurn += TurnBar;
         }
 

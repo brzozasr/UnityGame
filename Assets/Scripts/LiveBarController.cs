@@ -45,6 +45,7 @@ namespace DefaultNamespace
             
             //Debug.Log($"{color.r.ToString()} {color.g.ToString()} {color.b.ToString()}");
             _renderer.material.color = color;
+            _renderer.material.SetColor("_EmissionColor", color);
         }
     }
 }

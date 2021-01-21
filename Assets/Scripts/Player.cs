@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     private int _moveSpeed;
 
     public static event EventHandler<float> OnHit;
-    public static event EventHandler<string> OnPlatformEnter;
+    public static event EventHandler OnPlatformEnter;
     public static event EventHandler OnTurn;
     public static bool Dead = false;
 
@@ -237,16 +237,10 @@ public class Player : MonoBehaviour
             gameObject.transform.SetParent(other.gameObject.transform);
         }
 
-        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip2") > 0)
+        if (other.gameObject.CompareTag("DoorPlatform"))
         {
-            Debug.Log("Enter");
-            OnPlatformEnter?.Invoke(this, "Chip2");
-        }
-        
-        if (other.gameObject.CompareTag("HorizontalDoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip1") > 0)
-        {
-            Debug.Log("Enter");
-            OnPlatformEnter?.Invoke(this, "Chip1");
+            Debug.Log("On the door");
+            OnPlatformEnter?.Invoke(this, EventArgs.Empty);
         }
     }
 

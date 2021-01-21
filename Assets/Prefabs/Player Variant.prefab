@@ -201,6 +201,19 @@ CapsuleCollider:
   m_Height: 2.0127769
   m_Direction: 1
   m_Center: {x: 1.1427777e-16, y: 0.99126613, z: 0.039291576}
+--- !u!135 &1548934168
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129558820902908772}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 1.48, z: 0}
 --- !u!114 &1335907617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,20 +242,7 @@ MonoBehaviour:
   walkSpeed: 1
   runSpeed: 3
   resurectionDelaySec: 2
-  liveNumber: 3
---- !u!135 &1548934168
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6129558820902908772}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 1.48, z: 0}
+  liveNumber: 1
 --- !u!1001 &53350195175125735
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -683,17 +683,17 @@ PrefabInstance:
     - target: {fileID: 7673487251499544664, guid: c98043d57e0190845b790d7b92990bee,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 64.71
+      value: 20.31
       objectReference: {fileID: 0}
     - target: {fileID: 7673487251499544664, guid: c98043d57e0190845b790d7b92990bee,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13
+      value: 9.6
       objectReference: {fileID: 0}
     - target: {fileID: 7673487251499544664, guid: c98043d57e0190845b790d7b92990bee,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7673487251499544664, guid: c98043d57e0190845b790d7b92990bee,
         type: 3}

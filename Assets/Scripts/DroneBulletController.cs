@@ -56,16 +56,18 @@ namespace DefaultNamespace
 
         private void OnCollisionEnter(Collision other)
         {
-            if (!other.gameObject.CompareTag("Enemy"))
-            {
-                Instantiate(explosion, transform.position, transform.rotation);
-                Destroy(gameObject);
-            }
-            
-            if(other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Enemy"))
+                return;
+
+            if (other.gameObject.CompareTag("Player"))
             {
                 FindObjectOfType<AudioManager>().PlaySound("BulletHitPlayer");
+                Instantiate(explosion, transform.position, transform.rotation);
+                Destroy(gameObject);
+                return;
             }
+            
+            Destroy(gameObject);
         }
     }
 }

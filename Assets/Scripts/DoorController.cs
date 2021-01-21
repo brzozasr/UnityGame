@@ -4,9 +4,11 @@ using UnityEngine.Serialization;
 
 namespace DefaultNamespace
 {
-    public class DoorController : MonoBehaviour, IDoorController
+    public class DoorController : MonoBehaviour
     {
         public string compatibleChipName;
+        public int requiredCompatibleChipNameCount;
+        public bool isGameOverChip;
         public Material greenLight;
         public Material redLight;
         public GameObject door;
@@ -21,9 +23,9 @@ namespace DefaultNamespace
             Player.OnPlatformEnter += OpenDoor;
         }
 
-        public void OpenDoor(object sender, string chip)
+        public void OpenDoor(object sender, EventArgs args)
         {
-            if (compatibleChipName.Equals(chip))
+            if (DataStore.GetItemQuantityFromInventory(compatibleChipName) >= requiredCompatibleChipNameCount)
             {
                 var sphere = doorPlatform.GetChild(0);
                 var spotLight = doorPlatform.GetChild(1);
@@ -35,7 +37,7 @@ namespace DefaultNamespace
                 _doorAnimation.Play("open");
                 FindObjectOfType<AudioManager>().PlaySound("DoorOpen");
 
-                if (chip.Equals("Chip2"))
+                if (isGameOverChip)
                 {
                     DataStore.IsWonGameOver = true;
                 }

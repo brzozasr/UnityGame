@@ -9,6 +9,7 @@ namespace DefaultNamespace
         public string compatibleChipName;
         public int requiredCompatibleChipNameCount;
         public bool isGameOverChip;
+        public bool isOpened;
         public Material greenLight;
         public Material redLight;
         public GameObject door;
@@ -37,6 +38,7 @@ namespace DefaultNamespace
 
                 _doorAnimation.Play("open");
                 FindObjectOfType<AudioManager>().PlaySound("DoorOpen");
+                isOpened = true;
 
                 if (isGameOverChip)
                 {

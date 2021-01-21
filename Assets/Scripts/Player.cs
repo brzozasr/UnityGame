@@ -240,12 +240,17 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("DoorPlatform"))
         {
             Debug.Log("On the door");
-            OnPlatformEnterArgs args = new OnPlatformEnterArgs();
-
-            args.ChipName = other.gameObject.transform.parent.gameObject.GetComponent<DoorController>().compatibleChipName;
-            args.ChipNumber = DataStore.GetItemQuantityFromInventory(args.ChipName);
             
-            OnPlatformEnter?.Invoke(this, args);
+            if (!other.gameObject.transform.parent.gameObject.GetComponent<DoorController>().isOpened)
+            {
+                OnPlatformEnterArgs args = new OnPlatformEnterArgs();
+
+                args.ChipName = other.gameObject.transform.parent.gameObject.GetComponent<DoorController>()
+                    .compatibleChipName;
+                args.ChipNumber = DataStore.GetItemQuantityFromInventory(args.ChipName);
+
+                OnPlatformEnter?.Invoke(this, args);
+            }
         }
     }
 

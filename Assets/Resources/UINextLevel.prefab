@@ -137,7 +137,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: ba28437896f8db75baba6c67c17a2063, type: 3}
+  m_Texture: {fileID: 2800000, guid: 6915c991e72197d5e851870a822b31b9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7517069361240534480}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bd735dcb8dbbb0ca8aa82c601c05033, type: 3}
+  m_Script: {fileID: 11500000, guid: d9ceee673f7a875beb6b77625ca94a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}

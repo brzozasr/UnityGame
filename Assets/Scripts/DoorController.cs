@@ -23,10 +23,11 @@ namespace DefaultNamespace
             Player.OnPlatformEnter += OpenDoor;
         }
 
-        public void OpenDoor(object sender, EventArgs args)
+        public void OpenDoor(object sender, OnPlatformEnterArgs args)
         {
-            if (DataStore.GetItemQuantityFromInventory(compatibleChipName) >= requiredCompatibleChipNameCount)
+            if (args.ChipName.Equals(compatibleChipName) && args.ChipNumber >= requiredCompatibleChipNameCount)
             {
+                Debug.Log($"Chip name: {compatibleChipName} count: {DataStore.GetItemQuantityFromInventory(compatibleChipName).ToString()}");
                 var sphere = doorPlatform.GetChild(0);
                 var spotLight = doorPlatform.GetChild(1);
 
@@ -39,7 +40,7 @@ namespace DefaultNamespace
 
                 if (isGameOverChip)
                 {
-                    DataStore.IsWonGameOver = true;
+                    //DataStore.IsWonGameOver = true;
                 }
             }
         }

@@ -17,6 +17,7 @@ TagManager:
   - SF_Door
   - DoorPlatform
   - HorizontalDoorPlatform
+  - Background
   layers:
   - Default
   - TransparentFX
@@ -32,7 +33,7 @@ TagManager:
   - PlayerBullet
   - Widget
   - Chip
-  - 
+  - Background
   - 
   - 
   - 

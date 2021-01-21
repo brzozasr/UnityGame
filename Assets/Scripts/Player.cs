@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         OnHit = null;
+        OnPlatformEnter = null;
     }
 
     // Start is called before the first frame update

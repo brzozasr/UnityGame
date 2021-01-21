@@ -37,6 +37,7 @@ namespace DefaultNamespace
             _isRunOnce = false;
             int index = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(index + 1);
+            DataStore.IsLevelOver = false;
             Time.timeScale = 1;
             AudioListener.pause = false;
         }

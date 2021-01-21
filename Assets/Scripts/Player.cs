@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
     private int _moveSpeed;
 
     public static event EventHandler<float> OnHit;
-    public static event EventHandler<string> OnPlatformEnter;
+    public static event EventHandler<OnPlatformEnterArgs> OnPlatformEnter;
     public static event EventHandler OnTurn;
     public static bool Dead = false;
 
@@ -253,27 +253,20 @@ public class Player : MonoBehaviour
             gameObject.transform.SetParent(other.gameObject.transform);
         }
 
-        if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip2") > 0)
+        if (other.gameObject.CompareTag("DoorPlatform"))
         {
-            Debug.Log("Enter");
-            if (SceneManager.GetActiveScene().buildIndex == 1)
-            {
-                if (DataStore.GetItemQuantityFromInventory("Chip2") == 3)
-                {
-                    OnPlatformEnter?.Invoke(this, "Chip2");
-                }
-            }
-            else if (SceneManager.GetActiveScene().buildIndex > 1)
-            {
-                OnPlatformEnter?.Invoke(this, "Chip2");
-            }
+            Debug.Log("On the door");
             
-        }
-        
-        if (other.gameObject.CompareTag("HorizontalDoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip1") > 0)
-        {
-            Debug.Log("Enter");
-            OnPlatformEnter?.Invoke(this, "Chip1");
+            if (!other.gameObject.transform.parent.gameObject.GetComponent<DoorController>().isOpened)
+            {
+                OnPlatformEnterArgs args = new OnPlatformEnterArgs();
+
+                args.ChipName = other.gameObject.transform.parent.gameObject.GetComponent<DoorController>()
+                    .compatibleChipName;
+                args.ChipNumber = DataStore.GetItemQuantityFromInventory(args.ChipName);
+
+                OnPlatformEnter?.Invoke(this, args);
+            }
         }
     }
 

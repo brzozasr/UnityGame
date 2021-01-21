@@ -4,9 +4,12 @@ using UnityEngine.SceneManagement;
 
 namespace DefaultNamespace
 {
-    public class DoorController : MonoBehaviour, IDoorController
+    public class DoorController : MonoBehaviour
     {
         public string compatibleChipName;
+        public int requiredCompatibleChipNameCount;
+        public bool isGameOverChip;
+        public bool isOpened;
         public Material greenLight;
         public Material redLight;
         public GameObject door;
@@ -21,10 +24,11 @@ namespace DefaultNamespace
             Player.OnPlatformEnter += OpenDoor;
         }
 
-        public void OpenDoor(object sender, string chip)
+        public void OpenDoor(object sender, OnPlatformEnterArgs args)
         {
-            if (compatibleChipName.Equals(chip))
+            if (args.ChipName.Equals(compatibleChipName) && args.ChipNumber >= requiredCompatibleChipNameCount)
             {
+                Debug.Log($"Chip name: {compatibleChipName} count: {DataStore.GetItemQuantityFromInventory(compatibleChipName).ToString()}");
                 var sphere = doorPlatform.GetChild(0);
                 var spotLight = doorPlatform.GetChild(1);
 
@@ -34,8 +38,9 @@ namespace DefaultNamespace
 
                 _doorAnimation.Play("open");
                 FindObjectOfType<AudioManager>().PlaySound("DoorOpen");
+                isOpened = true;
 
-                if (chip.Equals("Chip2"))
+                if (args.ChipName.Equals("Chip2"))
                 {
                     if (SceneManager.sceneCountInBuildSettings - 1 == SceneManager.GetActiveScene().buildIndex)
                     {
@@ -47,7 +52,7 @@ namespace DefaultNamespace
 
                         if (SceneManager.GetActiveScene().buildIndex == 1)
                         {
-                            DataStore.RemoveItemsFromInventory("Chip2", 3);
+                            DataStore.RemoveItemsFromInventory("Chip2", requiredCompatibleChipNameCount);
                         }
                     }
                 }

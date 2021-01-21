@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.SceneManagement;
 
 namespace DefaultNamespace
 {
@@ -37,7 +37,14 @@ namespace DefaultNamespace
 
                 if (chip.Equals("Chip2"))
                 {
-                    DataStore.IsWonGameOver = true;
+                    if (SceneManager.sceneCountInBuildSettings - 1 == SceneManager.GetActiveScene().buildIndex)
+                    {
+                        DataStore.IsWonGameOver = true;
+                    }
+                    else
+                    {
+                        DataStore.IsLevelOver = true;
+                    }
                 }
             }
         }

@@ -73,7 +73,7 @@ namespace DefaultNamespace
             return score;
         }
 
-        internal static void AddItemToInventory(string itemName, int itemQuantity)
+        internal static void AddItemsToInventory(string itemName, int itemQuantity)
         {
             if (Inventory.ContainsKey(itemName))
             {
@@ -83,6 +83,18 @@ namespace DefaultNamespace
             else
             {
                 Inventory.Add(itemName, itemQuantity);
+            }
+        }
+        
+        internal static void RemoveItemsFromInventory(string itemName, int itemQuantity)
+        {
+            if (Inventory.ContainsKey(itemName))
+            {
+                var quantity = Inventory[itemName];
+                if (quantity >= itemQuantity)
+                {
+                    Inventory[itemName] = quantity - itemQuantity;
+                }
             }
         }
 

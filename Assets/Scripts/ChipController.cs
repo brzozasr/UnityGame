@@ -17,7 +17,7 @@ namespace DefaultNamespace
             if (other.gameObject.CompareTag("Player"))
             {
                 FindObjectOfType<AudioManager>().PlaySound("CollectChip");
-                DataStore.AddItemToInventory(itemName, itemQuantity);
+                DataStore.AddItemsToInventory(itemName, itemQuantity);
                 Destroy(gameObject);
             }
         }

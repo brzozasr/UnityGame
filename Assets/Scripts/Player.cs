@@ -3,6 +3,7 @@ using System.Collections;
 using System.Globalization;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
@@ -83,15 +84,29 @@ public class Player : MonoBehaviour
         _playerStartPosition = transform.position;
 
         _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
+        
+        // Points and lives calculation
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            // Initiate start lives number
+            DataStore.StartLives = liveNumber;
+            // Initiate start HP points
+            DataStore.StartHpPoints = (int) livePoints;
+            // Initiate lives number
+            DataStore.SetCurrentLives(liveNumber);
+            _actualLiveNumber = liveNumber;
+            // Initiate HP points
+            DataStore.SetCurrentHpPoints((int) livePoints);
+        }
+        else
+        {
+            // Update number of lives
+            _actualLiveNumber = DataStore.Lives;
+            // Update HP points
+            _actualLivePoints = DataStore.HpPoints;
+        }
 
-        // Initiate start HP points
-        DataStore.StartHpPoints = (int) livePoints;
-        DataStore.SetCurrentHpPoints((int) livePoints);
         FirstAidKitController.OnFirstAidCollected += RecalculateHpPoints;
-        // Initiate number of lives
-        _actualLiveNumber = liveNumber;
-        DataStore.StartLives = liveNumber;
-        DataStore.SetCurrentLives(liveNumber);
     }
 
     private void RecalculateHpPoints(int hpPoints)
@@ -240,7 +255,18 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("DoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip2") > 0)
         {
             Debug.Log("Enter");
-            OnPlatformEnter?.Invoke(this, "Chip2");
+            if (SceneManager.GetActiveScene().buildIndex == 1)
+            {
+                if (DataStore.GetItemQuantityFromInventory("Chip2") == 3)
+                {
+                    OnPlatformEnter?.Invoke(this, "Chip2");
+                }
+            }
+            else if (SceneManager.GetActiveScene().buildIndex > 1)
+            {
+                OnPlatformEnter?.Invoke(this, "Chip2");
+            }
+            
         }
         
         if (other.gameObject.CompareTag("HorizontalDoorPlatform") && DataStore.GetItemQuantityFromInventory("Chip1") > 0)

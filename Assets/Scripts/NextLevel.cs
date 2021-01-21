@@ -25,14 +25,14 @@ namespace DefaultNamespace
 
         IEnumerator ShowNextLevelImage()
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2.0f);
             transform.SetParent(canvas.transform, false);
             AudioListener.pause = true;
         }
 
         IEnumerator GoToNextLevel()
         {
-            yield return new WaitForSeconds(4.0f);
+            yield return new WaitForSeconds(5.0f);
             transform.parent = null;
             _isRunOnce = false;
             int index = SceneManager.GetActiveScene().buildIndex;

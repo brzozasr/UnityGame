@@ -33,7 +33,7 @@ namespace DefaultNamespace
         IEnumerator GoToNextLevel()
         {
             yield return new WaitForSeconds(5.0f);
-            transform.parent = null;
+            // transform.parent = null;
             _isRunOnce = false;
             int index = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(index + 1);

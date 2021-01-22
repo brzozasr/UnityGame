@@ -86,6 +86,16 @@ public class Player : MonoBehaviour
 
         _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
         
+        
+        // Initiate start lives number
+        DataStore.StartLives = liveNumber;
+        // Initiate start HP points
+        DataStore.StartHpPoints = (int) livePoints;
+        // Initiate lives number
+        DataStore.SetCurrentLives(liveNumber);
+        _actualLiveNumber = liveNumber;
+        // Initiate HP points
+        DataStore.SetCurrentHpPoints((int) livePoints);
         // Points and lives calculation
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {

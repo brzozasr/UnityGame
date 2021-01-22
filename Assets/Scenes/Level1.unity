@@ -211,6 +211,11 @@ PrefabInstance:
       propertyPath: compatibleChipName
       value: Chip2
       objectReference: {fileID: 0}
+    - target: {fileID: 4968781709207785011, guid: cfef738579cd02c40b3b1d63e67b0f84,
+        type: 3}
+      propertyPath: requiredCompatibleChipNameCount
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfef738579cd02c40b3b1d63e67b0f84, type: 3}
 --- !u!4 &58621927 stripped
@@ -15032,6 +15037,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1963362907}
   - component: {fileID: 1963362906}
+  - component: {fileID: 1963362908}
   m_Layer: 0
   m_Name: BridgeS07
   m_TagString: Bridge
@@ -15074,6 +15080,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1963362908
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963362905}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9513817, y: 0.9845848, z: 1.0307055}
+  m_Center: {x: -3.204382, y: -1.3334923, z: -0.015352726}
 --- !u!1001 &1964607943
 PrefabInstance:
   m_ObjectHideFlags: 0

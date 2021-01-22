@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 865075586027800208}
   - component: {fileID: 865075586027800214}
   - component: {fileID: 865075586027800209}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: BgImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72.84, y: -66.19}
+  m_AnchoredPosition: {x: 72.84009, y: -66.19}
   m_SizeDelta: {x: 145.68102, y: 132.36682}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &865075586027800214
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 865075586210187948}
   - component: {fileID: 865075586210187938}
   - component: {fileID: 865075586210187949}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: ChipText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 865075586340787633}
   - component: {fileID: 865075586340787639}
   - component: {fileID: 865075586340787638}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: ChipImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 865075586576097418}
   - component: {fileID: 865075586576097416}
   - component: {fileID: 865075586576097419}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 865075586870462019}
   - component: {fileID: 865075586870462017}
   - component: {fileID: 865075586870462016}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: LivesText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -559,7 +559,7 @@ GameObject:
   - component: {fileID: 865075587659297141}
   - component: {fileID: 865075587659297140}
   - component: {fileID: 865075587659297416}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -673,7 +673,7 @@ GameObject:
   - component: {fileID: 865075588147016287}
   - component: {fileID: 865075588147016285}
   - component: {fileID: 865075588147016284}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: HpText
   m_TagString: Untagged
   m_Icon: {fileID: 0}

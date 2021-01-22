@@ -38,6 +38,8 @@ namespace DefaultNamespace
             int index = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(index + 1);
             DataStore.IsLevelOver = false;
+            DataStore.RemoveItemsFromInventory("Chip2", DataStore.GetItemQuantityFromInventory("Chip2"));
+            DataStore.RemoveItemsFromInventory("Chip1", DataStore.GetItemQuantityFromInventory("Chip1"));
             Time.timeScale = 1;
             AudioListener.pause = false;
         }

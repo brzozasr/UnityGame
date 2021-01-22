@@ -38,8 +38,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.034999847, y: -0.041000366}
-  m_SizeDelta: {x: 1180.1467, y: 567.1164}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1630, y: 1100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2128591302402962845
 CanvasRenderer:
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2128591303216113544}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f94f0143a8001349b353098924559d4, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b9054d45a4104d06a00c3c4689ee38a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
@@ -320,7 +320,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: b3626267a3138250fa88fb10a83bcce5, type: 3}
+  m_Texture: {fileID: 2800000, guid: 5a1d52740644a72018c7eb2d92ec5fee, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0

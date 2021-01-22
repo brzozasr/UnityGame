@@ -58,8 +58,6 @@ public class Player : MonoBehaviour
     private static readonly int Run = Animator.StringToHash("run");
     private static readonly int Walk = Animator.StringToHash("walk");
 
-    private PhysicMaterial _boxColliderMaterial;
-
     private void Awake()
     {
         OnHit = null;
@@ -75,8 +73,7 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _playerBulletScript = playerBullet.GetComponent<PlayerBulletController>();
         _capsuleCollider = GetComponent<CapsuleCollider>();
-        _boxColliderMaterial = _capsuleCollider.material;
-        
+
         _actualLivePoints = livePoints;
         _shotTime = DateTime.Now;
 
@@ -92,11 +89,14 @@ public class Player : MonoBehaviour
         {
             // Initiate start lives number
             DataStore.StartLives = liveNumber;
+            
             // Initiate start HP points
             DataStore.StartHpPoints = (int) livePoints;
+            
             // Initiate lives number
             DataStore.SetCurrentLives(liveNumber);
             _actualLiveNumber = liveNumber;
+            
             // Initiate HP points
             DataStore.SetCurrentHpPoints((int) livePoints);
         }
@@ -104,6 +104,7 @@ public class Player : MonoBehaviour
         {
             // Update number of lives
             _actualLiveNumber = DataStore.Lives;
+            
             // Update HP points
             _actualLivePoints = DataStore.HpPoints;
         }

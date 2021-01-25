@@ -44,7 +44,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+*.resS
 
 .DS_Store
-*/Test.app/*
-*/LinuxBuild/*
+Test.app/*
+LinuxBuild/*

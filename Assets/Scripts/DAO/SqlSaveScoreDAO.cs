@@ -7,21 +7,21 @@ using UnityEngine;
 
 namespace DefaultNamespace.DAO
 {
-    public class SqlSaveScoreDAO : MonoBehaviour, ISqlGameObjectData
+    public class SqlSaveScoreDAO : MonoBehaviour
     {
-        [NonSerialized]
-        public long SaveID;
+        public static long SaveID { get; private set; }
+        
+        private long _scoreID;
         
         /// <summary>
         /// Method saves the save data name and score
         /// </summary>
-        /// <param name="obj">Pass here the Canvas Object</param>
-        public void Save(GameObjectData obj)
+        public void Save()
         {
             var lives = DataStore.Lives;
             var hp = DataStore.HpPoints;
             var points = DataStore.Score;
-            var chip = DataStore.Inventory;
+            var chips = DataStore.Inventory;
             
             try
             {
@@ -94,6 +94,44 @@ namespace DefaultNamespace.DAO
 
                         cmd.ExecuteNonQuery();
                     }
+                    
+                    using (var cmdScoreId = conn.CreateCommand())
+                    {
+                        cmdScoreId.CommandType = CommandType.Text;
+                        cmdScoreId.CommandText = "SELECT last_insert_rowid()";
+                        _scoreID = (long) cmdScoreId.ExecuteScalar();
+                    }
+
+                    foreach (var chip in chips)
+                    {
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.CommandText =
+                                @"INSERT INTO inventory (inventory_score_id, inventory_item_name, inventory_item_no)
+                                          VALUES (@InventoryScoreId, @InventoryItemName, @InventoryItemNo);";
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "InventoryScoreId",
+                                Value = _scoreID
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "InventoryItemName",
+                                Value = chip.Key
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "InventoryItemNo",
+                                Value = chip.Value
+                            });
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
                 }
             }
             catch (Exception e)
@@ -103,7 +141,7 @@ namespace DefaultNamespace.DAO
             }
         }
 
-        public List<GameObjectData> Load()
+        public void Load()
         {
             throw new NotImplementedException();
         }

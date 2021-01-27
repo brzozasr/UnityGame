@@ -3,10 +3,10 @@ using Spawner;
 
 namespace DefaultNamespace.DAO
 {
-    public interface ISqlGameObjectData
+    public interface ISqlGameObjectData<T>
     {
-        void Save(GameObjectData obj);
+        void Save(T obj);
 
-        List<GameObjectData> Load();
+        List<T> Load(int saveId);
     }
 }

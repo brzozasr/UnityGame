@@ -8,9 +8,9 @@ namespace Spawner
 {
     public class DroneData : GameObjectData
     {
-        private float _shotTimeRangeFrom;
-        private float _shotTimeRangeTo;
-        private int _hitPoints;
+        public float ShotTimeRangeFrom { get; private set; }
+        public float ShotTimeRangeTo { get; private set; }
+        public int HitPoints { get; private set; }
 
         private DroneController _droneController;
         
@@ -20,20 +20,20 @@ namespace Spawner
         {
             _droneController = drone.GetComponent<DroneController>();
             
-            _shotTimeRangeFrom = shotTimeRangeFrom;
-            _shotTimeRangeTo = shotTimeRangeTo;
-            _hitPoints = hitPoints;
+            ShotTimeRangeFrom = shotTimeRangeFrom;
+            ShotTimeRangeTo = shotTimeRangeTo;
+            HitPoints = hitPoints;
         }
-        
+
         /// <summary>
         /// The method must be executed before spawning an object.
         /// The method updates 
         /// </summary>
         public override void UpdateGoData()
         {
-            _droneController.shootTimeRangeFrom = _shotTimeRangeFrom;
-            _droneController.shootTimeRangeTo = _shotTimeRangeTo;
-            _droneController.hitPoints = _hitPoints;
+            _droneController.shootTimeRangeFrom = ShotTimeRangeFrom;
+            _droneController.shootTimeRangeTo = ShotTimeRangeTo;
+            _droneController.hitPoints = HitPoints;
         }
         
         public static (Vector3, float, float, int) GetDroneParameters(Transform drone)
@@ -53,9 +53,9 @@ namespace Spawner
             StringBuilder sb = new StringBuilder();
             
             sb.Append($"Object name: {Go.name}; ");
-            sb.Append($"ShotTimeRangeFrom: {_shotTimeRangeFrom.ToString()}; ");
-            sb.Append($"ShotTimeRangeTo: {_shotTimeRangeTo.ToString()}; ");
-            sb.Append($"HitPoints: {_hitPoints.ToString()}; ");
+            sb.Append($"ShotTimeRangeFrom: {ShotTimeRangeFrom.ToString()}; ");
+            sb.Append($"ShotTimeRangeTo: {ShotTimeRangeTo.ToString()}; ");
+            sb.Append($"HitPoints: {HitPoints.ToString()}; ");
 
             return sb.ToString();
         }

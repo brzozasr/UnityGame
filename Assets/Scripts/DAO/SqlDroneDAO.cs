@@ -7,10 +7,8 @@ using UnityEngine;
 
 namespace DefaultNamespace.DAO
 {
-    public class SqlDroneDAO : ISqlGameObjectData
+    public class SqlDroneDAO : ISqlGameObjectData<GameObjectData>
     {
-        private long _lastID;
-        
         public void Save(GameObjectData obj)
         {
             try
@@ -18,68 +16,79 @@ namespace DefaultNamespace.DAO
                 using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
                 {
                     conn.Open();
-                    using (var cmd = conn.CreateCommand())
+
+                    if (obj.Go.name == "Drone")
                     {
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = @"INSERT INTO save (save_date, save_name, save_scene_id)
-                                          VALUES (@SaveDate, @SaveName, @SaveSceneId);";
+                        DroneData droneData = (DroneData) obj;
 
-                        cmd.Parameters.Add(new SqliteParameter
-                        {
-                            ParameterName = "SaveDate",
-                            Value = SqlDataConnection.CurrentDataTime
-                        });
-
-                        cmd.Parameters.Add(new SqliteParameter
-                        {
-                            ParameterName = "SaveName",
-                            Value = "TestName" // TODO set value from text field
-                        });
-
-                        cmd.Parameters.Add(new SqliteParameter
-                        {
-                            ParameterName = "SaveSceneId",
-                            Value = SqlDataConnection.CurrentSceneIndex
-                        });
-
-                        cmd.ExecuteNonQuery();
-                    }
-                    
-                    using (var cmdLastId = conn.CreateCommand())
-                    {
-                        cmdLastId.CommandType = CommandType.Text;
-                        cmdLastId.CommandText = "SELECT last_insert_rowid()";
-                        _lastID = (long) cmdLastId.ExecuteScalar();
-                    }
-
-                    if (obj.Go.name == "Player Variant")
-                    {
-                        
-                    }
-                    else if (obj.Go.name == "Drone")
-                    {
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandType = CommandType.Text;
-                            cmd.CommandText = @"INSERT INTO drone (save_date, save_name, save_scene_id)
-                                          VALUES (@SaveDate, @SaveName, @SaveSceneId);";
+                            cmd.CommandText = @"INSERT INTO drone (drone_save_id, drone_scene_id, drone_name, 
+                                                drone_shot_time_from, drone_shot_time_to, drone_hit_points, 
+                                                drone_pos_x, drone_pos_y, drone_pos_z, drone_parent)
+                                                VALUES (@DroneSaveId, @DroneSceneId, @DroneName, @DroneShotTimeFrom, 
+                                                        @DroneShotTimeTo, @DroneHitPoints, @DronePosX, @DronePosY, 
+                                                        @DronePosZ, @DroneParent);";
 
                             cmd.Parameters.Add(new SqliteParameter
                             {
-                                ParameterName = "SaveDate",
-                                Value = SqlDataConnection.CurrentDataTime
+                                ParameterName = "DroneSaveId",
+                                Value = SqlSaveScoreDAO.SaveID
                             });
 
                             cmd.Parameters.Add(new SqliteParameter
                             {
-                                ParameterName = "SaveName",
-                                Value = "TestName" // TODO set value from text field
+                                ParameterName = "DroneSceneId",
+                                Value = SqlDataConnection.CurrentSceneIndex 
                             });
 
                             cmd.Parameters.Add(new SqliteParameter
                             {
-                                ParameterName = "SaveSceneId",
-                                Value = SqlDataConnection.CurrentSceneIndex
+                                ParameterName = "DroneName",
+                                Value = droneData.Go.name
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneShotTimeFrom",
+                                Value = droneData.ShotTimeRangeFrom
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneShotTimeTo",
+                                Value = droneData.ShotTimeRangeTo
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneHitPoints",
+                                Value = droneData.HitPoints
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosX",
+                                Value = droneData.Position.x
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosY",
+                                Value = droneData.Position.y
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosZ",
+                                Value = droneData.Position.z
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneParent",
+                                Value = String.Join("/", droneData.Parents)
                             });
 
                             cmd.ExecuteNonQuery();
@@ -87,28 +96,206 @@ namespace DefaultNamespace.DAO
                     }
                     else if (obj.Go.name == "SuperDrone")
                     {
+                        SuperDroneData superDroneData = (SuperDroneData) obj;
+
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.CommandText = @"INSERT INTO drone (drone_save_id, drone_scene_id, drone_name, 
+                                                drone_shot_time_from, drone_shot_time_to, drone_hit_points, 
+                                                drone_speed, drone_move_y, drone_pos_x, drone_pos_y, 
+                                                drone_pos_z, drone_parent)
+                                                VALUES (@DroneSaveId, @DroneSceneId, @DroneName, @DroneShotTimeFrom, 
+                                                        @DroneShotTimeTo, @DroneHitPoints, @DroneSpeed, @DroneMoveY,
+                                                        @DronePosX, @DronePosY, @DronePosZ, @DroneParent);";
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneSaveId",
+                                Value = SqlSaveScoreDAO.SaveID
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneSceneId",
+                                Value = SqlDataConnection.CurrentSceneIndex
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneName",
+                                Value = superDroneData.Go.name
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneShotTimeFrom",
+                                Value = superDroneData.ShotTimeRangeFrom
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneShotTimeTo",
+                                Value = superDroneData.ShotTimeRangeTo
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneHitPoints",
+                                Value = superDroneData.HitPoints
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneSpeed",
+                                Value = superDroneData.MoveSpeed
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneMoveY",
+                                Value = superDroneData.MaxMoveY
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosX",
+                                Value = superDroneData.Position.x
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosY",
+                                Value = superDroneData.Position.y
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosZ",
+                                Value = superDroneData.Position.z
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneParent",
+                                Value = String.Join("/", superDroneData.Parents)
+                            });
+
+                            cmd.ExecuteNonQuery();
+                        }
                     }
                     else if (obj.Go.name == "MegaDrone")
                     {
+                        MegaDroneData megaDroneData = (MegaDroneData) obj;
+
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.CommandText = @"INSERT INTO drone (drone_save_id, drone_scene_id, drone_name, 
+                                                drone_shot_time_from, drone_shot_time_to, drone_hit_points, 
+                                                drone_speed, drone_move_y, drone_move_x, drone_pos_x, drone_pos_y, 
+                                                drone_pos_z, drone_parent)
+                                                VALUES (@DroneSaveId, @DroneSceneId, @DroneName, @DroneShotTimeFrom, 
+                                                        @DroneShotTimeTo, @DroneHitPoints, @DroneSpeed, @DroneMoveY,
+                                                        @DroneMoveX, @DronePosX, @DronePosY, @DronePosZ, @DroneParent);";
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneSaveId",
+                                Value = SqlSaveScoreDAO.SaveID
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneSceneId",
+                                Value = SqlDataConnection.CurrentSceneIndex
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneName",
+                                Value = megaDroneData.Go.name
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneShotTimeFrom",
+                                Value = megaDroneData.ShotTimeRangeFrom
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneShotTimeTo",
+                                Value = megaDroneData.ShotTimeRangeTo
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneHitPoints",
+                                Value = megaDroneData.HitPoints
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneSpeed",
+                                Value = megaDroneData.MoveSpeed
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneMoveY",
+                                Value = megaDroneData.MaxMoveY
+                            });
+                            
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneMoveX",
+                                Value = megaDroneData.MaxMoveX
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosX",
+                                Value = megaDroneData.Position.x
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosY",
+                                Value = megaDroneData.Position.y
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DronePosZ",
+                                Value = megaDroneData.Position.z
+                            });
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "DroneParent",
+                                Value = String.Join("/", megaDroneData.Parents)
+                            });
+
+                            cmd.ExecuteNonQuery();
+                        }
                     }
-                    else if (obj.Go.name == "Chip")
-                    {
-                        
-                    }
-                    else if (obj.Go.name == "FirstAidKitBiohazard" ||
-                             obj.Go.name == "FirstAidKitGreen" || 
-                             obj.Go.name == "FirstAidKitRed" || 
-                             obj.Go.name == "FirstAidKitWhite")
-                    {
-                        
-                    }
-                    else if (obj.Go.name == "PointWidgetS" ||
-                             obj.Go.name == "PointWidgetM" || 
-                             obj.Go.name == "PointWidgetL" || 
-                             obj.Go.name == "PointWidgetXL")
-                    {
-                        
-                    }
+
+                    // else if (obj.Go.name == "Chip")
+                    // {
+                    // }
+                    // else if (obj.Go.name == "FirstAidKitBiohazard" ||
+                    //          obj.Go.name == "FirstAidKitGreen" ||
+                    //          obj.Go.name == "FirstAidKitRed" ||
+                    //          obj.Go.name == "FirstAidKitWhite")
+                    // {
+                    // }
+                    // else if (obj.Go.name == "PointWidgetS" ||
+                    //          obj.Go.name == "PointWidgetM" ||
+                    //          obj.Go.name == "PointWidgetL" ||
+                    //          obj.Go.name == "PointWidgetXL")
+                    // {
+                    // }
                 }
             }
             catch (Exception e)
@@ -118,7 +305,7 @@ namespace DefaultNamespace.DAO
             }
         }
 
-        public List<GameObjectData> Load()
+        public List<GameObjectData> Load(int saveId)
         {
             return new List<GameObjectData>();
         }

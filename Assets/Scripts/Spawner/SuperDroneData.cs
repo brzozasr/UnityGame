@@ -8,11 +8,11 @@ namespace Spawner
 {
     public class SuperDroneData : GameObjectData
     {
-        private float _shotTimeRangeFrom;
-        private float _shotTimeRangeTo;
-        private int _hitPoints;
-        private float _maxMoveY;
-        private float _moveSpeed;
+        public float ShotTimeRangeFrom;
+        public float ShotTimeRangeTo;
+        public int HitPoints;
+        public float MaxMoveY;
+        public float MoveSpeed;
         
         private SuperDroneController _superDroneController;
 
@@ -23,20 +23,20 @@ namespace Spawner
         {
             _superDroneController = drone.GetComponent<SuperDroneController>();
             
-            _shotTimeRangeFrom = shotTimeRangeFrom;
-            _shotTimeRangeTo = shotTimeRangeTo;
-            _hitPoints = hitPoints;
-            _maxMoveY = maxMoveY;
-            _moveSpeed = moveSpeed;
+            ShotTimeRangeFrom = shotTimeRangeFrom;
+            ShotTimeRangeTo = shotTimeRangeTo;
+            HitPoints = hitPoints;
+            MaxMoveY = maxMoveY;
+            MoveSpeed = moveSpeed;
         }
         
         public override void UpdateGoData()
         {
-            _superDroneController.shootTimeRangeFrom = _shotTimeRangeFrom;
-            _superDroneController.shootTimeRangeTo = _shotTimeRangeTo;
-            _superDroneController.hitPoints = _hitPoints;
-            _superDroneController.maxMoveY = _maxMoveY;
-            _superDroneController.moveSpeed = _moveSpeed;
+            _superDroneController.shootTimeRangeFrom = ShotTimeRangeFrom;
+            _superDroneController.shootTimeRangeTo = ShotTimeRangeTo;
+            _superDroneController.hitPoints = HitPoints;
+            _superDroneController.maxMoveY = MaxMoveY;
+            _superDroneController.moveSpeed = MoveSpeed;
         }
         
         public static (Vector3, float, float, int, float, float) GetSuperDroneParameters(Transform superDrone)
@@ -58,9 +58,9 @@ namespace Spawner
             StringBuilder sb = new StringBuilder();
             
             sb.Append($"Object name: {Go.name}; ");
-            sb.Append($"ShotTimeRangeFrom: {_shotTimeRangeFrom.ToString()}; ");
-            sb.Append($"ShotTimeRangeTo: {_shotTimeRangeTo.ToString()}; ");
-            sb.Append($"HitPoints: {_hitPoints.ToString()}; ");
+            sb.Append($"ShotTimeRangeFrom: {ShotTimeRangeFrom.ToString()}; ");
+            sb.Append($"ShotTimeRangeTo: {ShotTimeRangeTo.ToString()}; ");
+            sb.Append($"HitPoints: {HitPoints.ToString()}; ");
 
             return sb.ToString();
         }

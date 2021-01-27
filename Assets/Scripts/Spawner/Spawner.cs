@@ -47,7 +47,7 @@ namespace Spawner
             var newPlayer = Instantiate(player, position, Quaternion.identity);
             newPlayer.transform.Rotate(Vector3.up, 90.0f);
             
-            // cameraBoxScript.Player = newPlayer.transform;
+            cameraBoxScript.Player = newPlayer.transform;
             
             drone.GetComponent<DroneController>().canvas = canvas.GetComponent<Canvas>();
             superDrone.GetComponent<SuperDroneController>().canvas = canvas.GetComponent<Canvas>();

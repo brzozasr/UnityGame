@@ -17,9 +17,10 @@ namespace DefaultNamespace.DAO
             // DBPath = $"URI=file:/Users/sbrzoza/RiderProjects/UnityTest/Assets/Database/data.db";
             
             DBPath = $"URI=file:data.db";
-            Debug.Log(DBPath);
-            
+
             Invoke(nameof(GetHighScores), 3.0f);
+            SqlDroneDAO sqlDroneDao = new SqlDroneDAO();
+            
         }
         
         public void GetHighScores() {

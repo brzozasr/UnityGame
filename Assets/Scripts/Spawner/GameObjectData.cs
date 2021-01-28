@@ -12,7 +12,7 @@ namespace Spawner
         public GameObjectData(GameObject go, Vector3 position, List<string> parents)
         {
             Go = go;
-            Parents = parents;
+            Parents = new List<string>(parents);
             Position = position;
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DefaultNamespace;
+using DefaultNamespace.DAO;
 using UnityEngine;
 using Random = System.Random;
 
@@ -9,7 +10,7 @@ namespace Spawner
 {
     public class Spawner : MonoBehaviour
     {
-        public GameObject canvas;
+        public Canvas canvas;
         public GameObject player;
         public GameObject pointWidgetS;
         public GameObject pointWidgetM;
@@ -40,23 +41,59 @@ namespace Spawner
         {
             GameObjects = new Dictionary<string, GameObject>();
             GameObjects.Add("Drone", drone);
-            GameObjects.Add("SuperDrone", drone);
+            GameObjects.Add("SuperDrone", superDrone);
+            GameObjects.Add("MegaDrone", megaDrone);
+            
+            GameObjects.Add("FirstAidKitBiohazard", firstAidKitBiohazard);
+            GameObjects.Add("FirstAidKitGreen", firstAidKitGreen);
+            GameObjects.Add("FirstAidKitRed", firstAidKitRed);
+            GameObjects.Add("FirstAidKitWhite", firstAidKitWhite);
+            
+            GameObjects.Add("PointWidgetS", pointWidgetS);
+            GameObjects.Add("PointWidgetM", pointWidgetM);
+            GameObjects.Add("PointWidgetL", pointWidgetL);
+            GameObjects.Add("PointWidgetXL", pointWidgetXl);
+            
+            GameObjects.Add("Chip", chip);
+            
+            GameObjects.Add("Player", player);
 
-            Vector3 position = new Vector3(2.27f, 0.8f, 0.4f);
+            /*Vector3 position = new Vector3(2.27f, 0.8f, 0.4f);
 
             var newPlayer = Instantiate(player, position, Quaternion.identity);
             newPlayer.transform.Rotate(Vector3.up, 90.0f);
             
-            cameraBoxScript.Player = newPlayer.transform;
-            
-            drone.GetComponent<DroneController>().canvas = canvas.GetComponent<Canvas>();
-            superDrone.GetComponent<SuperDroneController>().canvas = canvas.GetComponent<Canvas>();
+            cameraBoxScript.Player = newPlayer.transform;*/
 
+            drone.GetComponent<DroneController>().canvas = canvas;
+            superDrone.GetComponent<SuperDroneController>().canvas = canvas;
+            megaDrone.GetComponent<MegaDroneController>().canvas = canvas;
+
+            
+            List<string> parents = new List<string>()
+            {
+                "Level",
+            };
+            
+            Vector3 playerPosition = new Vector3(2.27f, 0.8f, 0.4f);
+            PlayerData playerData = new PlayerData(player, playerPosition, parents, 50.0f, 5);
+            
+            playerData.UpdateGoData();
+            var newPlayerObject = Instantiate(playerData.Go, playerData.Position, Quaternion.identity);
+                
+            GameObject parent = GetParent(playerData.Parents);
+            newPlayerObject.transform.SetParent(parent.transform);
+            newPlayerObject.transform.localPosition = playerData.Position;
+            newPlayerObject.name = playerData.Go.name;
+            newPlayerObject.transform.Rotate(Vector3.up, 90.0f);
+            cameraBoxScript.Player = newPlayerObject.transform;
+            
             SpawnDrones();
         }
 
         public void Start()
         {
+            return;
             List<GameObjectData> positions = new List<GameObjectData>();
             List<string> parents = new List<string>()
             {
@@ -64,7 +101,8 @@ namespace Spawner
             };
             Transform level = GameObject.Find("Level").transform;
             GetPositions(ref positions, level, parents);
-            
+
+            SqlDroneDAO sqlDroneDao = new SqlDroneDAO();
             Debug.Log($"Count: {positions.Count.ToString()}");
             foreach (var god in positions)
             {
@@ -72,9 +110,27 @@ namespace Spawner
                 {
                     case DroneData droneData:
                         Debug.Log(droneData);
+                        sqlDroneDao.Save(god);
                         break;
-                    case SuperDroneData droneData:
-                        Debug.Log(droneData);
+                    case SuperDroneData superDroneData:
+                        Debug.Log(superDroneData);
+                        sqlDroneDao.Save(god);
+                        break;
+                    case MegaDroneData megaDroneData:
+                        Debug.Log(megaDroneData);
+                        sqlDroneDao.Save(god);
+                        break;
+                    case FirstAidKitData firstAidKitData:
+                        Debug.Log(firstAidKitData);
+                        break;
+                    case PointWidgetData pointWidgetData:
+                        Debug.Log(pointWidgetData);
+                        break;
+                    case ChipData chipData:
+                        Debug.Log(chipData);
+                        break;
+                    case PlayerData playerData:
+                        Debug.Log(playerData);
                         break;
                 }
             }
@@ -82,7 +138,7 @@ namespace Spawner
 
         private void SpawnDrones()
         {
-            List<string> parents = new List<string>()
+            /*List<string> parents = new List<string>()
             {
                 "Level",
                 "BridgeS01"
@@ -100,6 +156,14 @@ namespace Spawner
             Vector3 dronePosition3 = new Vector3(13.33f, 12.46f, 0.0f);
             SuperDroneData drone3 = new SuperDroneData(superDrone, dronePosition3, parents2, 3.0f, 4.0f, 4, 1.0f, 2.0f);
             positions3.Add(drone3);
+            
+            Vector3 dronePosition4 = new Vector3(19.3f, 1.49f, 0.0f);
+            MegaDroneData drone4 = new MegaDroneData(megaDrone, dronePosition4, parents2, 3.0f, 4.0f, 4, 1.0f, 2.0f, 1.5f);
+            positions3.Add(drone4);*/
+            
+            
+            SqlDroneDAO sqlDroneDao = new SqlDroneDAO();
+            List<GameObjectData> positions3 = sqlDroneDao.Load(0);
             
             foreach (var gObject in positions3)
             {
@@ -129,8 +193,8 @@ namespace Spawner
 
                 if (child.childCount > 0 && !GameObjects.ContainsKey(gameObjectName))
                 {
+                    parents.Add(child.name);
                     GetPositions(ref positions, child, parents);
-                    parents.Add(parent.name);
                 }
                 else
                 {
@@ -157,6 +221,119 @@ namespace Spawner
                                 
                                 positions.Add(superDroneData);
                                 
+                                break;
+                            case ("MegaDrone"):
+                                (Vector3 megaDronePosition, float megaDroneShotTimeRangeFrom,
+                                        float megaDroneShotTimeRangeTo, int megaDroneHitPoints, float megaMaxMoveY,
+                                        float megaMoveSpeed, float megaMaxMoveX) =
+                                    MegaDroneData.GetMegaDroneParameters(child);
+                                
+                                MegaDroneData megaDroneData = new MegaDroneData(megaDrone, megaDronePosition, parents,
+                                    megaDroneShotTimeRangeFrom,
+                                    megaDroneShotTimeRangeTo, megaDroneHitPoints, megaMaxMoveY, megaMoveSpeed, megaMaxMoveX);
+                                
+                                positions.Add(megaDroneData);
+                                
+                                break;
+                            case ("FirstAidKitBiohazard"):
+                                (Vector3 firstAidKitBiohazardPosition, int hitPointRecovery) =
+                                    FirstAidKitData.GetFirstAidKitParameters(child);
+                                
+                                FirstAidKitData firstAidKitBiohazardData = new FirstAidKitData(firstAidKitBiohazard,
+                                    firstAidKitBiohazardPosition, parents, hitPointRecovery);
+                                
+                                positions.Add(firstAidKitBiohazardData);
+                                
+                                break;
+                            case ("FirstAidKitGreen"):
+                                (Vector3 firstAidKitGreenPosition, int hitPointRecoveryGreen) =
+                                    FirstAidKitData.GetFirstAidKitParameters(child);
+                                
+                                FirstAidKitData firstAidKitGreenData = new FirstAidKitData(firstAidKitGreen,
+                                    firstAidKitGreenPosition, parents, hitPointRecoveryGreen);
+                                
+                                positions.Add(firstAidKitGreenData);
+                                
+                                break;
+                            case ("FirstAidKitRed"):
+                                (Vector3 firstAidKitRedPosition, int hitPointRecoveryRed) =
+                                    FirstAidKitData.GetFirstAidKitParameters(child);
+                                
+                                FirstAidKitData firstAidKitRedData = new FirstAidKitData(firstAidKitGreen,
+                                    firstAidKitRedPosition, parents, hitPointRecoveryRed);
+                                
+                                positions.Add(firstAidKitRedData);
+                                
+                                break;
+                            case ("FirstAidKitWhite"):
+                                (Vector3 firstAidKitWhitePosition, int hitPointRecoveryWhite) =
+                                    FirstAidKitData.GetFirstAidKitParameters(child);
+                                
+                                FirstAidKitData firstAidKitWhiteData = new FirstAidKitData(firstAidKitGreen,
+                                    firstAidKitWhitePosition, parents, hitPointRecoveryWhite);
+                                
+                                positions.Add(firstAidKitWhiteData);
+                                
+                                break;
+                            case ("PointWidgetS"):
+                                (Vector3 pointWidgetSPosition, int widgetPointsS) =
+                                    PointWidgetData.GetPointWidgetParameters(child);
+                                
+                                PointWidgetData pointWidgetSData = new PointWidgetData(pointWidgetS,
+                                    pointWidgetSPosition, parents, widgetPointsS);
+                                
+                                positions.Add(pointWidgetSData);
+                                
+                                break;
+                            case ("PointWidgetM"):
+                                (Vector3 pointWidgetMPosition, int widgetPointsM) =
+                                    PointWidgetData.GetPointWidgetParameters(child);
+                                
+                                PointWidgetData pointWidgetMData = new PointWidgetData(pointWidgetM,
+                                    pointWidgetMPosition, parents, widgetPointsM);
+                                
+                                positions.Add(pointWidgetMData);
+                                
+                                break;
+                            case ("PointWidgetL"):
+                                (Vector3 pointWidgetLPosition, int widgetPointsL) =
+                                    PointWidgetData.GetPointWidgetParameters(child);
+                                
+                                PointWidgetData pointWidgetLData = new PointWidgetData(pointWidgetL,
+                                    pointWidgetLPosition, parents, widgetPointsL);
+                                
+                                positions.Add(pointWidgetLData);
+                                
+                                break;
+                            case ("PointWidgetXL"):
+                                (Vector3 pointWidgetXlPosition, int widgetPointsXl) =
+                                    PointWidgetData.GetPointWidgetParameters(child);
+                                
+                                PointWidgetData pointWidgetXlData = new PointWidgetData(pointWidgetXl,
+                                    pointWidgetXlPosition, parents, widgetPointsXl);
+                                
+                                positions.Add(pointWidgetXlData);
+                                
+                                break;
+                            case ("Chip"):
+                                (Vector3 chipPosition, string itemName, int itemQuantity) =
+                                    ChipData.GetChipParameters(child);
+                                
+                                ChipData chipData = new ChipData(chip,
+                                    chipPosition, parents, itemName, itemQuantity);
+                                
+                                positions.Add(chipData);
+                                
+                                break;
+                            case ("Player"):
+                                (Vector3 playerPosition, float livePoints, int liveNumber) =
+                                    PlayerData.GetPlayerParameters(child);
+                                
+                                PlayerData playerData = new PlayerData(player,
+                                    playerPosition, parents, livePoints, liveNumber);
+                                
+                                positions.Add(playerData);
+
                                 break;
                         }
                     }

@@ -85,7 +85,8 @@ public class Player : MonoBehaviour
         
         
         // Points and lives calculation
-        if (SceneManager.GetActiveScene().buildIndex == 1)
+        // Change scene index to 3 for debugging process
+        if (SceneManager.GetActiveScene().buildIndex == 4)
         {
             // Initiate start lives number
             DataStore.StartLives = liveNumber;

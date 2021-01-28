@@ -40,7 +40,7 @@ namespace Spawner
         {
             DroneController droneController = drone.gameObject.GetComponent<DroneController>();
             
-            Vector3 position = drone.position;
+            Vector3 position = drone.localPosition;
             float shotTimeRangeFrom = droneController.shootTimeRangeFrom;
             float shotTimeRangeTo = droneController.shootTimeRangeTo;
             int hitPoints = droneController.hitPoints;

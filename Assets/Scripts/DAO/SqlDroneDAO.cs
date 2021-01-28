@@ -327,13 +327,16 @@ namespace DefaultNamespace.DAO
                             var shotTimeFrom = reader.GetFloat(2);
                             var shotTimeTo = reader.GetFloat(3);
                             var hitPoints = reader.GetInt32(4);
-                            var speed = reader.GetFloat(5);
-                            var moveY = reader.GetFloat(6);
-                            var moveX = reader.GetFloat(7);
-                            var posX = reader.GetFloat(4);
-                            var posY = reader.GetFloat(5);
-                            var posZ = reader.GetFloat(6);
-                            var parent = reader.GetString(7);
+                            
+                            var posX = reader.GetFloat(8);
+                            var posY = reader.GetFloat(9);
+                            var posZ = reader.GetFloat(10);
+                            
+                            var parent = reader.GetString(11);
+                            
+                            float speed;
+                            float moveY;
+                            float moveX;
 
                             if (name == "Drone")
                             {
@@ -343,10 +346,15 @@ namespace DefaultNamespace.DAO
 
                                 DroneData chipData =
                                     new DroneData(_prefab, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints);
+                                
+                                Debug.Log($"Drone name: {chipData.Go.name}");
                                 gameObjectDataList.Add(chipData);
                             }
                             else if (name == "SuperDrone")
                             {
+                                moveY = reader.GetFloat(6);
+                                speed = reader.GetFloat(5);
+                                
                                 _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
                                 _vector3 = new Vector3(posX, posY, posZ);
                                 _parent = parent.Split('/').ToList();
@@ -357,6 +365,10 @@ namespace DefaultNamespace.DAO
                             }
                             else if (name == "MegaDrone")
                             {
+                                moveY = reader.GetFloat(6);
+                                speed = reader.GetFloat(5);
+                                moveX = reader.GetFloat(7);
+                                
                                 _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
                                 _vector3 = new Vector3(posX, posY, posZ);
                                 _parent = parent.Split('/').ToList();

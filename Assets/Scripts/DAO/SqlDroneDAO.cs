@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Mono.Data.Sqlite;
 using Spawner;
+using UnityEditor;
 using UnityEngine;
 
 namespace DefaultNamespace.DAO
 {
     public class SqlDroneDAO : ISqlGameObjectData<GameObjectData>
     {
+        private GameObject _prefab;
+        private Vector3 _vector3;
+        private List<string> _parent;
+        
         public void Save(GameObjectData obj)
         {
             try
@@ -291,7 +297,85 @@ namespace DefaultNamespace.DAO
 
         public List<GameObjectData> Load(int saveId)
         {
-            return new List<GameObjectData>();
+            List<GameObjectData> gameObjectDataList = new List<GameObjectData>();
+            
+            try
+            {
+                using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
+                {
+                    conn.Open();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = @"SELECT drone_scene_id, drone_name, drone_shot_time_from, 
+                                            drone_shot_time_to, drone_hit_points, drone_speed, 
+                                            drone_move_y, drone_move_x, drone_pos_x, drone_pos_y, 
+                                            drone_pos_z, drone_parent FROM drone 
+                                            WHERE drone_save_id = @SaveID;";
+
+                        cmd.Parameters.Add(new SqliteParameter
+                        {
+                            ParameterName = "SaveID",
+                            Value = saveId
+                        });
+
+                        var reader = cmd.ExecuteReader();
+                        while (reader.Read()) {
+                            var sceneId = reader.GetInt32(0);
+                            var name = reader.GetString(1);
+                            var shotTimeFrom = reader.GetFloat(2);
+                            var shotTimeTo = reader.GetFloat(3);
+                            var hitPoints = reader.GetInt32(4);
+                            var speed = reader.GetFloat(5);
+                            var moveY = reader.GetFloat(6);
+                            var moveX = reader.GetFloat(7);
+                            var posX = reader.GetFloat(4);
+                            var posY = reader.GetFloat(5);
+                            var posZ = reader.GetFloat(6);
+                            var parent = reader.GetString(7);
+
+                            if (name == "Drone")
+                            {
+                                _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                                _vector3 = new Vector3(posX, posY, posZ);
+                                _parent = parent.Split('/').ToList();
+
+                                DroneData chipData =
+                                    new DroneData(_prefab, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints);
+                                gameObjectDataList.Add(chipData);
+                            }
+                            else if (name == "SuperDrone")
+                            {
+                                _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                                _vector3 = new Vector3(posX, posY, posZ);
+                                _parent = parent.Split('/').ToList();
+
+                                SuperDroneData chipData =
+                                    new SuperDroneData(_prefab, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints, moveY, speed);
+                                gameObjectDataList.Add(chipData);
+                            }
+                            else if (name == "MegaDrone")
+                            {
+                                _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                                _vector3 = new Vector3(posX, posY, posZ);
+                                _parent = parent.Split('/').ToList();
+
+                                MegaDroneData chipData =
+                                    new MegaDroneData(_prefab, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints, moveY, speed, moveX);
+                                gameObjectDataList.Add(chipData);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                throw;
+            }
+
+            return gameObjectDataList;
         }
     }
 }

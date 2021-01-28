@@ -43,7 +43,7 @@ namespace DefaultNamespace.DAO
                         cmd.Parameters.Add(new SqliteParameter
                         {
                             ParameterName = "SaveName",
-                            Value = "TestName" // TODO set value from text field
+                            Value = DialogExit.SaveNameInputField
                         });
 
                         cmd.Parameters.Add(new SqliteParameter

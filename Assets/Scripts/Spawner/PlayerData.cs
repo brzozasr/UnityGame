@@ -7,8 +7,8 @@ namespace Spawner
 {
     public class PlayerData : GameObjectData
     {
-        private float _livePoints;
-        private int _liveNumber;
+        public float LivePoints;
+        public int LiveNumber;
 
         private Player _player;
         
@@ -17,14 +17,14 @@ namespace Spawner
         {
             _player = player.GetComponent<Player>();
             
-            _livePoints = livePoints;
-            _liveNumber = liveNumber;
+            LivePoints = livePoints;
+            LiveNumber = liveNumber;
         }
         
         public override void UpdateGoData()
         {
-            _player.livePoints = _livePoints;
-            _player.liveNumber = _liveNumber;
+            _player.livePoints = LivePoints;
+            _player.liveNumber = LiveNumber;
         }
         
         public static (Vector3, float, int) GetPlayerParameters(Transform player)
@@ -43,8 +43,8 @@ namespace Spawner
             StringBuilder sb = new StringBuilder();
             
             sb.Append($"Object name: {Go.name}; ");
-            sb.Append($"Live points: {_livePoints.ToString()}; ");
-            sb.Append($"Live number: {_liveNumber.ToString()}; ");
+            sb.Append($"Live points: {LivePoints.ToString()}; ");
+            sb.Append($"Live number: {LiveNumber.ToString()}; ");
 
             return sb.ToString();
         }

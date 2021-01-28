@@ -7,7 +7,7 @@ namespace Spawner
 {
     public class FirstAidKitData : GameObjectData
     {
-        private int _hitPointRecovery;
+        public int HitPointRecovery;
 
         private FirstAidKitController _firstAidKitController;
         
@@ -16,12 +16,12 @@ namespace Spawner
         {
             _firstAidKitController = firstAidKit.GetComponent<FirstAidKitController>();
             
-            _hitPointRecovery = hitPointRecovery;
+            HitPointRecovery = hitPointRecovery;
         }
         
         public override void UpdateGoData()
         {
-            _firstAidKitController.hitPointRecovery = _hitPointRecovery;
+            _firstAidKitController.hitPointRecovery = HitPointRecovery;
         }
         
         public static (Vector3, int) GetFirstAidKitParameters(Transform firstAidKit)
@@ -39,7 +39,7 @@ namespace Spawner
             StringBuilder sb = new StringBuilder();
             
             sb.Append($"Object name: {Go.name}; ");
-            sb.Append($"HitPointRecovery: {_hitPointRecovery.ToString()}; ");
+            sb.Append($"HitPointRecovery: {HitPointRecovery.ToString()}; ");
 
             return sb.ToString();
         }

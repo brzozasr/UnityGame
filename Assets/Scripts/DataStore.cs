@@ -16,20 +16,6 @@ namespace DefaultNamespace
 
         internal static Dictionary<string, int> Inventory = new Dictionary<string, int>();
 
-        internal static List<FirstAid> FirstAids = new List<FirstAid>();
-
-        internal static void RemoveFirstAid(int uniqueId)
-        {
-            for (int i = 0; i < FirstAids.Count; i++)
-            {
-                if (FirstAids[i].UniqueId == uniqueId)
-                {
-                    FirstAids.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-
         internal static void Clear()
         {
             Lives = 0;

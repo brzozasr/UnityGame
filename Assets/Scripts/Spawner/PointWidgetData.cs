@@ -7,7 +7,7 @@ namespace Spawner
 {
     public class PointWidgetData : GameObjectData
     {
-        private int _widgetPoints;
+        public int WidgetPoints;
         
         private PointWidgetController _pointWidgetController;
         
@@ -16,12 +16,12 @@ namespace Spawner
         {
             _pointWidgetController = pointWidget.GetComponent<PointWidgetController>();
             
-            _widgetPoints = widgetPoints;
+            WidgetPoints = widgetPoints;
         }
         
         public override void UpdateGoData()
         {
-            _pointWidgetController.widgetPoints = _widgetPoints;
+            _pointWidgetController.widgetPoints = WidgetPoints;
         }
         
         public static (Vector3, int) GetPointWidgetParameters(Transform pointWidget)
@@ -39,7 +39,7 @@ namespace Spawner
             StringBuilder sb = new StringBuilder();
             
             sb.Append($"Object name: {Go.name}; ");
-            sb.Append($"WidgetPoints: {_widgetPoints.ToString()}; ");
+            sb.Append($"WidgetPoints: {WidgetPoints.ToString()}; ");
 
             return sb.ToString();
         }

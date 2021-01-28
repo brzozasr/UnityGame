@@ -7,8 +7,8 @@ namespace Spawner
 {
     public class ChipData : GameObjectData
     {
-        private string _itemName;
-        private int _itemQuantity;
+        public string ItemName;
+        public int ItemQuantity;
 
         private ChipController _chipController;
         
@@ -17,14 +17,14 @@ namespace Spawner
         {
             _chipController = chip.GetComponent<ChipController>();
             
-            _itemName = itemName;
-            _itemQuantity = itemQuantity;
+            ItemName = itemName;
+            ItemQuantity = itemQuantity;
         }
         
         public override void UpdateGoData()
         {
-            _chipController.itemName = _itemName;
-            _chipController.itemQuantity = _itemQuantity;
+            _chipController.itemName = ItemName;
+            _chipController.itemQuantity = ItemQuantity;
         }
         
         public static (Vector3, string, int) GetChipParameters(Transform chip)
@@ -43,8 +43,8 @@ namespace Spawner
             StringBuilder sb = new StringBuilder();
             
             sb.Append($"Object name: {Go.name}; ");
-            sb.Append($"ItemName: {_itemName}; ");
-            sb.Append($"ItemQuantity: {_itemQuantity.ToString()}; ");
+            sb.Append($"ItemName: {ItemName}; ");
+            sb.Append($"ItemQuantity: {ItemQuantity.ToString()}; ");
 
             return sb.ToString();
         }

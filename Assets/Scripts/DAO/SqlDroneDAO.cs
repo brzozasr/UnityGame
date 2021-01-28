@@ -280,22 +280,6 @@ namespace DefaultNamespace.DAO
                             cmd.ExecuteNonQuery();
                         }
                     }
-
-                    // else if (obj.Go.name == "Chip")
-                    // {
-                    // }
-                    // else if (obj.Go.name == "FirstAidKitBiohazard" ||
-                    //          obj.Go.name == "FirstAidKitGreen" ||
-                    //          obj.Go.name == "FirstAidKitRed" ||
-                    //          obj.Go.name == "FirstAidKitWhite")
-                    // {
-                    // }
-                    // else if (obj.Go.name == "PointWidgetS" ||
-                    //          obj.Go.name == "PointWidgetM" ||
-                    //          obj.Go.name == "PointWidgetL" ||
-                    //          obj.Go.name == "PointWidgetXL")
-                    // {
-                    // }
                 }
             }
             catch (Exception e)

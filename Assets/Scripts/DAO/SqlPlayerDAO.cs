@@ -17,6 +17,8 @@ namespace DefaultNamespace.DAO
         
         public void Save(GameObjectData obj)
         {
+            SqlDataConnection.SetCurrentSceneIndex();
+            
             try
             {
                 using (var conn = new SqliteConnection(SqlDataConnection.DBPath))

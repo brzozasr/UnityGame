@@ -23,6 +23,9 @@ namespace DefaultNamespace.DAO
             var points = DataStore.Score;
             var chips = DataStore.Inventory;
             
+            SqlDataConnection.SetCurrentDataTime();
+            SqlDataConnection.SetCurrentSceneIndex();
+            
             try
             {
                 using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
@@ -141,9 +144,79 @@ namespace DefaultNamespace.DAO
             }
         }
 
-        public void Load()
+        public void Load(int saveId)
         {
             throw new NotImplementedException();
+        }
+
+        public Dictionary<string, string> GetMenuItems()
+        {
+            var itemsMenu = new Dictionary<string, string>();
+            
+            try
+            {
+                using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
+                {
+                    conn.Open();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = @"SELECT save_id, save_date, save_name, 
+                                            save_scene_id FROM save;";
+
+                        var reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var saveId = reader.GetInt32(0);
+                            var date = reader.GetString(1);
+                            var saveName = reader.GetString(2);
+                            var sceneId = reader.GetInt32(3);
+
+                            var newDate = date.Split(':');
+                            
+                            itemsMenu.Add($"{saveId}-{sceneId}", $"{newDate[0]}:{newDate[1]}-{saveName}");
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return itemsMenu;
+        }
+        
+        public void DeleteSave(int saveId)
+        {
+            try
+            {
+                using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
+                {
+                    conn.Open();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = @"DELETE FROM save WHERE save_id = @SaveId;";
+                        
+                        cmd.Parameters.Add(new SqliteParameter {
+                            ParameterName = "SaveId",
+                            Value = saveId
+                        });
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

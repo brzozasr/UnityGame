@@ -11,11 +11,12 @@ namespace DefaultNamespace
     public class LoadMenu : MonoBehaviour
     {
         private Dictionary<string, string> _items;
+        private SqlSaveScoreDAO _sqlSaveScore;
         
         private void Start()
         {
-            var sqlSaveScore = gameObject.AddComponent<SqlSaveScoreDAO>();
-            _items = sqlSaveScore.GetMenuItems();
+            _sqlSaveScore = gameObject.AddComponent<SqlSaveScoreDAO>();
+            _items = _sqlSaveScore.GetMenuItems();
 
             var dropdownGameObject = GameObject.Find("/UILoadMenu/SavedDropdown");
             var dropdown = dropdownGameObject.GetComponent<TMP_Dropdown>();
@@ -41,7 +42,7 @@ namespace DefaultNamespace
                 }
                 else if (saveId > 1)
                 {
-                    sqlSaveScore.DeleteSave(saveId);
+                    _sqlSaveScore.DeleteSave(saveId);
                 }
             }
             
@@ -58,8 +59,10 @@ namespace DefaultNamespace
                 var keyString = _items.FirstOrDefault(x => x.Value == itemText).Key;
             
                 var data = keyString.Split('-');
+                var saveId = Int32.Parse(data[0]);
                 var sceneId = Int32.Parse(data[1]);
                 
+                _sqlSaveScore.Load(saveId);
                 SceneManager.LoadScene(sceneId);
             }
         }

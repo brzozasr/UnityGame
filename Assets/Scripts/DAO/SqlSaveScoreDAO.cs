@@ -146,7 +146,73 @@ namespace DefaultNamespace.DAO
 
         public void Load(int saveId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
+                {
+                    conn.Open();
+                    int scoreId = 0;
+                    
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = @"SELECT score_id, score_lives, score_hp, score_points 
+                                            FROM score WHERE score_save_id = @SaveId;";
+
+                        cmd.Parameters.Add(new SqliteParameter
+                        {
+                            ParameterName = "SaveId",
+                            Value = saveId
+                        });
+                        
+                        var reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            scoreId = reader.GetInt32(0);
+                            var lives = reader.GetInt32(1);
+                            var hp = reader.GetInt32(2);
+                            var points = reader.GetInt32(3);
+
+                            DataStore.SetCurrentLives(lives);
+                            DataStore.SetCurrentHpPoints(hp);
+                            DataStore.Score = points;
+                        }
+                    }
+
+                    if (scoreId > 0)
+                    {
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.CommandText =
+                                @"SELECT inventory_item_name, inventory_item_no 
+                                            FROM inventory WHERE inventory_score_id = @ScoreId;";
+
+                            cmd.Parameters.Add(new SqliteParameter
+                            {
+                                ParameterName = "ScoreId",
+                                Value = scoreId
+                            });
+
+                            var reader = cmd.ExecuteReader();
+
+                            while (reader.Read())
+                            {
+                                var itemName = reader.GetString(0);
+                                var itemNo = reader.GetInt32(1);
+                                
+                                DataStore.AddItemsToInventory(itemName, itemNo);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                throw;
+            }
         }
 
         public Dictionary<string, string> GetMenuItems()
@@ -183,7 +249,7 @@ namespace DefaultNamespace.DAO
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Debug.Log(e);
                 throw;
             }
 
@@ -214,7 +280,7 @@ namespace DefaultNamespace.DAO
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Debug.Log(e);
                 throw;
             }
         }

@@ -61,6 +61,15 @@ namespace DefaultNamespace
             }
         }
         
+        private void Start()
+        {
+            // Force drone position 1.5f above the ground
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit))
+            {
+                _posMegaY = hit.transform.position.y + 1.5f;
+            }
+        }
+        
         private void Update()
         {
             if (_iteratorMega >= _frameMega)
@@ -139,7 +148,7 @@ namespace DefaultNamespace
         
         private Transform GetPlayerTransform()
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            GameObject player = GameObject.Find("Player");
             
             if (player != null)
             {

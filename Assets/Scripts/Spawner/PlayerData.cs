@@ -7,12 +7,12 @@ namespace Spawner
 {
     public class PlayerData : GameObjectData
     {
-        public float LivePoints;
+        public int LivePoints;
         public int LiveNumber;
 
         private Player _player;
         
-        public PlayerData(GameObject player, Vector3 position, List<string> parents, float livePoints, int liveNumber) :
+        public PlayerData(GameObject player, Vector3 position, List<string> parents, int livePoints, int liveNumber) :
             base(player, position, parents)
         {
             _player = player.GetComponent<Player>();
@@ -23,16 +23,16 @@ namespace Spawner
         
         public override void UpdateGoData()
         {
-            _player.livePoints = LivePoints;
-            _player.liveNumber = LiveNumber;
+            _player.actualLivePoints = LivePoints;
+            _player.actualLiveNumber = LiveNumber;
         }
         
-        public static (Vector3, float, int) GetPlayerParameters(Transform player)
+        public static (Vector3, int, int) GetPlayerParameters(Transform player)
         {
             Player playerController = player.gameObject.GetComponent<Player>();
             
-            Vector3 position = player.position;
-            float livePoints = playerController.livePoints;
+            Vector3 position = player.localPosition;
+            int livePoints = playerController.livePoints;
             int liveNumber = playerController.liveNumber;
 
             return (position, livePoints, liveNumber);

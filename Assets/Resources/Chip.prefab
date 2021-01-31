@@ -18,7 +18,7 @@ GameObject:
   m_TagString: Chip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2380596894273157054
 Transform:
@@ -107,5 +107,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b7718a4e954e37a40149f9aaf62bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: Chip
+  itemName: Chip2
   itemQuantity: 1

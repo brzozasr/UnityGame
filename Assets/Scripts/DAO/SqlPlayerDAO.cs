@@ -12,8 +12,14 @@ namespace DefaultNamespace.DAO
     public class SqlPlayerDAO : ISqlGameObjectData<GameObjectData>
     {
         private GameObject _prefab;
+        private GameObject _player;
         private Vector3 _vector3;
         private List<string> _parent;
+
+        public SqlPlayerDAO(GameObject player)
+        {
+            _player = player;
+        }
         
         public void Save(GameObjectData obj)
         {
@@ -23,6 +29,7 @@ namespace DefaultNamespace.DAO
             {
                 using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
                 {
+                    conn.Open();
                     if (obj.Go.name == "Player")
                     {
                         PlayerData playerData = (PlayerData) obj;
@@ -50,13 +57,13 @@ namespace DefaultNamespace.DAO
                             cmd.Parameters.Add(new SqliteParameter
                             {
                                 ParameterName = "PlayerLives",
-                                Value = DataStore.StartLives
+                                Value = DataStore.Lives
                             });
 
                             cmd.Parameters.Add(new SqliteParameter
                             {
                                 ParameterName = "PlayerHp",
-                                Value = DataStore.StartHpPoints
+                                Value = DataStore.HpPoints
                             });
                             
                             cmd.Parameters.Add(new SqliteParameter
@@ -130,12 +137,12 @@ namespace DefaultNamespace.DAO
                             var parent = reader.GetString(6);
                             
                             // _prefab = Resources.Load<GameObject>($"Assets/Resources/{name}.prefab");
-                            _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Prefabs/Player.prefab", typeof(GameObject)) as GameObject;
+                            //_prefab = AssetDatabase.LoadAssetAtPath($"Assets/Prefabs/Player.prefab", typeof(GameObject)) as GameObject;
                             _vector3 = new Vector3(posX, posY, posZ);
                             _parent = parent.Split('/').ToList();
 
                             PlayerData playerData =
-                                new PlayerData(_prefab, _vector3, _parent, hp, lives);
+                                new PlayerData(_player, _vector3, _parent, hp, lives);
                             gameObjectDataList.Add(playerData);
                         }
                     }

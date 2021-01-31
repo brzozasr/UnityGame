@@ -13,6 +13,7 @@ namespace DefaultNamespace
     public class DialogExit : MonoBehaviour
     {
         public Canvas canvas;
+        public Spawner.Spawner spawner;
 
         public static string SaveNameInputField { get; private set; }
         
@@ -48,6 +49,8 @@ namespace DefaultNamespace
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                Player.menuOpened = true;
+                
                 if (SceneManager.GetActiveScene().buildIndex > 0)
                 {
                     if (_yesButton.activeInHierarchy)
@@ -80,8 +83,10 @@ namespace DefaultNamespace
                 _savedMessageText.SetActive(true);
                 SaveNameInputField = _inputField.text;
 
-                SqlSaveScoreDAO scoreDao = gameObject.AddComponent<SqlSaveScoreDAO>();
-                scoreDao.Save();
+                /*SqlSaveScoreDAO scoreDao = gameObject.AddComponent<SqlSaveScoreDAO>();
+                scoreDao.Save();*/
+                
+                spawner.Save();
                 
                 StartCoroutine(MenuAfterSave());
             }
@@ -135,6 +140,7 @@ namespace DefaultNamespace
 
         public void ResumeGame()
         {
+            Player.menuOpened = false;
             Time.timeScale = 1;
             AudioListener.pause = false;
             transform.position = new Vector3(-9999f, 0, 0);

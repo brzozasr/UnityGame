@@ -53,6 +53,8 @@ namespace DefaultNamespace
         internal static int AddHpPoints(int amountHpPoints)
         {
             int hp = HpPoints + amountHpPoints;
+            Debug.Log($"{hp.ToString()} = {HpPoints.ToString()} + {amountHpPoints.ToString()}");
+            Debug.Log($" - StartHpPoints: {StartHpPoints.ToString()}");
 
             if (hp > StartHpPoints)
             {

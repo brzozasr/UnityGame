@@ -15,8 +15,10 @@ public class Player : MonoBehaviour
     public LayerMask playerMask;
     public float shotFrequency;
     public float jumpForce;
-    public float livePoints;
+    public int livePoints;
     public float flyForce;
+    public int actualLivePoints;
+    public int actualLiveNumber;
 
     public int walkSpeed;
     public int runSpeed;
@@ -27,6 +29,8 @@ public class Player : MonoBehaviour
     private bool _fireKeyPressed;
     private bool _runKeyPressed;
     private bool _flyKeyPressed;
+    
+    public static bool menuOpened = false;
 
     private Animator _animator;
     private AudioManager _audioManager;
@@ -79,7 +83,7 @@ public class Player : MonoBehaviour
 
         _playerBoxColliderCenter = _capsuleCollider.center;
         _playerCapsuleColliderHeight = _capsuleCollider.height;
-        _playerStartPosition = transform.position;
+        _playerStartPosition = transform.localPosition;
 
         _arm = transform.Find("Hips").Find("ArmPosition_Right").gameObject;
         
@@ -90,40 +94,52 @@ public class Player : MonoBehaviour
         {
             // Initiate start lives number
             DataStore.StartLives = liveNumber;
+            Debug.Log($"DataStore.StartLives: {DataStore.StartLives.ToString()}");
             
             // Initiate start HP points
-            DataStore.StartHpPoints = (int) livePoints;
+            DataStore.StartHpPoints = livePoints;
+            Debug.Log($"DataStore.StartHpPoints: {DataStore.StartHpPoints.ToString()}");
             
             // Initiate lives number
-            DataStore.SetCurrentLives(liveNumber);
-            _actualLiveNumber = liveNumber;
+            DataStore.SetCurrentLives(actualLiveNumber);
+            _actualLiveNumber = actualLiveNumber;
+            Debug.Log($"actualLiveNumber: {actualLiveNumber.ToString()}");
             
             // Initiate HP points
-            DataStore.SetCurrentHpPoints((int) livePoints);
+            DataStore.SetCurrentHpPoints(actualLivePoints);
+            _actualLivePoints = actualLivePoints;
+            Debug.Log($"actualLivePoints: {actualLivePoints.ToString()}");
         }
         else
         {
+            DataStore.StartHpPoints = livePoints;
+            
             // Update number of lives
             _actualLiveNumber = DataStore.Lives;
+            //Debug.Log($"_actualLiveNumber: {_actualLiveNumber.ToString()}");
             
             // Update HP points
             _actualLivePoints = DataStore.HpPoints;
+            //Debug.Log($"_actualLivePoints: {_actualLivePoints.ToString()}");
         }
 
         FirstAidKitController.OnFirstAidCollected += RecalculateHpPoints;
         
-        OnHit?.Invoke(this, _actualLivePoints / livePoints);
+        //OnHit?.Invoke(this, _actualLivePoints / livePoints);
+        
+        //Debug.Log($"_actualLivePoints: {_actualLivePoints.ToString()} livePoints: {livePoints.ToString()}");
     }
 
     private void RecalculateHpPoints(int hpPoints)
     {
         _actualLivePoints = DataStore.AddHpPoints(hpPoints);
-        OnHit?.Invoke(this, _actualLivePoints / livePoints);
+        //OnHit?.Invoke(this, _actualLivePoints / livePoints);
     }
 
     // Update is called once per frame
     void Update()
     {
+        OnHit?.Invoke(this, _actualLivePoints / livePoints);
         // Update HP points
         DataStore.SetCurrentHpPoints((int) _actualLivePoints);
         // Update number of lives
@@ -211,7 +227,7 @@ public class Player : MonoBehaviour
         if (transform.position.y < -5.0f && !Dead)
         {
             _actualLivePoints = 0;
-            OnHit?.Invoke(this, _actualLivePoints/livePoints);
+            //OnHit?.Invoke(this, _actualLivePoints/livePoints);
             
             _animator.SetBool(Die, true);
             Dead = true;
@@ -279,7 +295,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Bridge"))
         {
-            gameObject.transform.parent = null;
+            gameObject.transform.parent = GameObject.Find("Level").transform;
         }
     }
 
@@ -289,7 +305,7 @@ public class Player : MonoBehaviour
         {
             Debug.Log($"Live points left: {_actualLivePoints.ToString(CultureInfo.CurrentCulture)}");
             _actualLivePoints--;
-            OnHit?.Invoke(this, _actualLivePoints / livePoints);
+            //OnHit?.Invoke(this, _actualLivePoints / livePoints);
         }
 
         if (_actualLivePoints <= 0 && !Dead)
@@ -308,9 +324,9 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(resurectionDelaySec);
 
-        transform.position = _playerStartPosition;
+        transform.localPosition = _playerStartPosition;
         _animator.SetBool(Die, false);
-        OnHit?.Invoke(this, 1.0f);
+        //OnHit?.Invoke(this, 1.0f);
         _actualLivePoints = livePoints;
         _capsuleCollider.height = _playerCapsuleColliderHeight;
         _capsuleCollider.center = _playerBoxColliderCenter;
@@ -319,35 +335,46 @@ public class Player : MonoBehaviour
 
     private void GetKeyState()
     {
-        if (Input.GetKeyDown(KeyCode.W))
-            _jumpKeyPressed = true;
-        else if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            _jumpKeyPressed = false;
-            _fireKeyPressed = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            _fireKeyPressed = false;
-            _jumpKeyPressed = false;
-        }
-        else
-        {
-            _jumpKeyPressed = false;
-        }
+        if (!menuOpened)
 
-        if (Input.GetKeyDown(KeyCode.R))
-            if (_runKeyPressed == false)
-                _runKeyPressed = true;
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+                _jumpKeyPressed = true;
+            else if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                _jumpKeyPressed = false;
+                _fireKeyPressed = true;
+            }
+            else if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                _fireKeyPressed = false;
+                _jumpKeyPressed = false;
+            }
             else
-                _runKeyPressed = false;
+            {
+                _jumpKeyPressed = false;
+            }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-            _flyKeyPressed = true;
+            if (Input.GetKeyDown(KeyCode.R))
+                if (_runKeyPressed == false)
+                    _runKeyPressed = true;
+                else
+                    _runKeyPressed = false;
 
-        if (Input.GetKeyUp(KeyCode.UpArrow))
-            _flyKeyPressed = false;
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+                _flyKeyPressed = true;
 
-        _horizontalInput = Input.GetAxis("Horizontal");
+            if (Input.GetKeyUp(KeyCode.UpArrow))
+                _flyKeyPressed = false;
+
+            /*if (Input.GetKeyDown(KeyCode.F))
+            {
+                Spawner.Spawner spawner = GameObject.Find("Spawner").GetComponent<Spawner.Spawner>();
+                spawner.Save();
+                Debug.Log("Saved");
+            }*/
+
+            _horizontalInput = Input.GetAxis("Horizontal");
+        }
     }
 }

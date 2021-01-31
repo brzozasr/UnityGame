@@ -48,6 +48,15 @@ namespace DefaultNamespace
             StartCoroutine(Shooting());
         }
 
+        private void Start()
+        {
+            // Force drone position 1.5f above the ground
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit))
+            {
+                _posSuperY = hit.transform.position.y + 1.5f;
+            }
+        }
+
         private void Update()
         {
             if (_iteratorSuper >= _frameSuper)

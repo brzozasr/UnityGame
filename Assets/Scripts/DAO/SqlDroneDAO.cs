@@ -12,9 +12,20 @@ namespace DefaultNamespace.DAO
     public class SqlDroneDAO : ISqlGameObjectData<GameObjectData>
     {
         private GameObject _prefab;
+        private GameObject _drone;
+        private GameObject _superDrone;
+        private GameObject _megaDrone;
         private Vector3 _vector3;
         private List<string> _parent;
+
+        public SqlDroneDAO(GameObject drone, GameObject superDrone, GameObject megaDrone)
+        {
+            _drone = drone;
+            _superDrone = superDrone;
+            _megaDrone = megaDrone;
+        }
         
+
         public void Save(GameObjectData obj)
         {
             SqlDataConnection.SetCurrentSceneIndex();
@@ -342,12 +353,12 @@ namespace DefaultNamespace.DAO
 
                             if (name == "Drone")
                             {
-                                _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                                //_prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
                                 _vector3 = new Vector3(posX, posY, posZ);
                                 _parent = parent.Split('/').ToList();
 
                                 DroneData chipData =
-                                    new DroneData(_prefab, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints);
+                                    new DroneData(_drone, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints);
                                 
                                 Debug.Log($"Drone name: {chipData.Go.name}");
                                 gameObjectDataList.Add(chipData);
@@ -357,12 +368,12 @@ namespace DefaultNamespace.DAO
                                 moveY = reader.GetFloat(6);
                                 speed = reader.GetFloat(5);
                                 
-                                _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                                //_prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
                                 _vector3 = new Vector3(posX, posY, posZ);
                                 _parent = parent.Split('/').ToList();
 
                                 SuperDroneData chipData =
-                                    new SuperDroneData(_prefab, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints, moveY, speed);
+                                    new SuperDroneData(_superDrone, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints, moveY, speed);
                                 gameObjectDataList.Add(chipData);
                             }
                             else if (name == "MegaDrone")
@@ -371,12 +382,12 @@ namespace DefaultNamespace.DAO
                                 speed = reader.GetFloat(5);
                                 moveX = reader.GetFloat(7);
                                 
-                                _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                                //_prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
                                 _vector3 = new Vector3(posX, posY, posZ);
                                 _parent = parent.Split('/').ToList();
 
                                 MegaDroneData chipData =
-                                    new MegaDroneData(_prefab, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints, moveY, speed, moveX);
+                                    new MegaDroneData(_megaDrone, _vector3, _parent, shotTimeFrom, shotTimeTo, hitPoints, moveY, speed, moveX);
                                 gameObjectDataList.Add(chipData);
                             }
                         }

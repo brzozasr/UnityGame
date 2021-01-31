@@ -13,8 +13,21 @@ namespace DefaultNamespace.DAO
     public class SqlFirstAidKitDAO : ISqlGameObjectData<GameObjectData>
     {
         private GameObject _prefab;
+        private readonly GameObject _firstAidKitBiohazard;
+        private readonly GameObject _firstAidKitGreen;
+        private readonly GameObject _firstAidKitRed;
+        private readonly GameObject _firstAidKitWhite;
         private Vector3 _vector3;
         private List<string> _parent;
+
+        public SqlFirstAidKitDAO(GameObject firstAidKitBiohazard, GameObject firstAidKitGreen, GameObject firstAidKitRed, GameObject firstAidKitWhite)
+        {
+            _firstAidKitBiohazard = firstAidKitBiohazard;
+            _firstAidKitGreen = firstAidKitGreen;
+            _firstAidKitRed = firstAidKitRed;
+            _firstAidKitWhite = firstAidKitWhite;
+        }
+        
         public void Save(GameObjectData obj)
         {
             SqlDataConnection.SetCurrentSceneIndex();
@@ -135,13 +148,39 @@ namespace DefaultNamespace.DAO
                             var parent = reader.GetString(6);
                             
                             // _prefab = Resources.Load<GameObject>($"Assets/Resources/{name}.prefab");
-                            _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                            //_prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                            
                             _vector3 = new Vector3(posX, posY, posZ);
                             _parent = parent.Split('/').ToList();
 
-                            FirstAidKitData firstAidKitData =
-                                new FirstAidKitData(_prefab, _vector3, _parent, recoveryPoints);
-                            gameObjectDataList.Add(firstAidKitData);
+                            if (name == "FirstAidKitBiohazard")
+                            {
+                                FirstAidKitData firstAidKitBiohazard =
+                                    new FirstAidKitData(_firstAidKitBiohazard, _vector3, _parent, recoveryPoints);
+                                
+                                gameObjectDataList.Add(firstAidKitBiohazard);
+                            }
+                            else if (name == "FirstAidKitGreen")
+                            {
+                                FirstAidKitData firstAidKitGreen =
+                                    new FirstAidKitData(_firstAidKitGreen, _vector3, _parent, recoveryPoints);
+                                
+                                gameObjectDataList.Add(firstAidKitGreen);
+                            }
+                            else if (name == "FirstAidKitRed")
+                            {
+                                FirstAidKitData firstAidKitRed =
+                                    new FirstAidKitData(_firstAidKitRed, _vector3, _parent, recoveryPoints);
+                                
+                                gameObjectDataList.Add(firstAidKitRed);
+                            }
+                            else if (name == "FirstAidKitWhite")
+                            {
+                                FirstAidKitData firstAidKitWhite =
+                                    new FirstAidKitData(_firstAidKitWhite, _vector3, _parent, recoveryPoints);
+                                
+                                gameObjectDataList.Add(firstAidKitWhite);
+                            }
                         }
                     }
                 }

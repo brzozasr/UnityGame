@@ -12,8 +12,14 @@ namespace DefaultNamespace.DAO
     public class SqlChipDAO : ISqlGameObjectData<GameObjectData>
     {
         private GameObject _prefab;
+        private GameObject _chip;
         private Vector3 _vector3;
         private List<string> _parent;
+
+        public SqlChipDAO(GameObject chip)
+        {
+            _chip = chip;
+        }
         
         public void Save(GameObjectData obj)
         {
@@ -23,6 +29,8 @@ namespace DefaultNamespace.DAO
             {
                 using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
                 {
+                    conn.Open();
+                    
                     if (obj.Go.name == "Chip")
                     {
                         ChipData chipData = (ChipData) obj;
@@ -138,12 +146,12 @@ namespace DefaultNamespace.DAO
                             var parent = reader.GetString(7);
                             
                             // _prefab = Resources.Load<GameObject>($"Assets/Resources/{name}.prefab");
-                            _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{chipName}.prefab", typeof(GameObject)) as GameObject;
+                            //_prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{chipName}.prefab", typeof(GameObject)) as GameObject;
                             _vector3 = new Vector3(posX, posY, posZ);
                             _parent = parent.Split('/').ToList();
 
                             ChipData chipData =
-                                new ChipData(_prefab, _vector3, _parent, itemName, itemNo);
+                                new ChipData(_chip, _vector3, _parent, itemName, itemNo);
                             gameObjectDataList.Add(chipData);
                         }
                     }

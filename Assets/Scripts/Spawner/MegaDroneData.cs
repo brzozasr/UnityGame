@@ -43,7 +43,7 @@ namespace Spawner
         {
             MegaDroneController megaDroneController = megaDrone.gameObject.GetComponent<MegaDroneController>();
             
-            Vector3 position = megaDrone.position;
+            Vector3 position = megaDrone.localPosition;
             float shotTimeRangeFrom = megaDroneController.shootTimeRangeFrom;
             float shotTimeRangeTo = megaDroneController.shootTimeRangeTo;
             int hitPoints = megaDroneController.hitPoints;

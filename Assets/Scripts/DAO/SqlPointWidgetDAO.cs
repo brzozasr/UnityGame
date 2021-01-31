@@ -12,8 +12,20 @@ namespace DefaultNamespace.DAO
     public class SqlPointWidgetDAO : ISqlGameObjectData<GameObjectData>
     {
         private GameObject _prefab;
+        private readonly GameObject _pointWidgetS;
+        private readonly GameObject _pointWidgetM;
+        private readonly GameObject _pointWidgetL;
+        private readonly GameObject _pointWidgetXl;
         private Vector3 _vector3;
         private List<string> _parent;
+
+        public SqlPointWidgetDAO(GameObject pointWidgetS, GameObject pointWidgetM, GameObject pointWidgetL, GameObject pointWidgetXl)
+        {
+            _pointWidgetS = pointWidgetS;
+            _pointWidgetM = pointWidgetM;
+            _pointWidgetL = pointWidgetL;
+            _pointWidgetXl = pointWidgetXl;
+        }
         
         public void Save(GameObjectData obj)
         {
@@ -23,6 +35,7 @@ namespace DefaultNamespace.DAO
             {
                 using (var conn = new SqliteConnection(SqlDataConnection.DBPath))
                 {
+                    conn.Open();
                     if (obj.Go.name == "PointWidgetS" || obj.Go.name == "PointWidgetM" ||
                         obj.Go.name == "PointWidgetL" || obj.Go.name == "PointWidgetXL")
                     {
@@ -131,13 +144,34 @@ namespace DefaultNamespace.DAO
                             var parent = reader.GetString(6);
                             
                             // _prefab = Resources.Load<GameObject>($"Assets/Resources/{name}.prefab");
-                            _prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
+                            //_prefab = AssetDatabase.LoadAssetAtPath($"Assets/Resources/{name}.prefab", typeof(GameObject)) as GameObject;
                             _vector3 = new Vector3(posX, posY, posZ);
                             _parent = parent.Split('/').ToList();
 
-                            PointWidgetData pointWidgetData =
-                                new PointWidgetData(_prefab, _vector3, _parent, points);
-                            gameObjectDataList.Add(pointWidgetData);
+                            if (name == "PointWidgetS")
+                            {
+                                PointWidgetData pointWidgetS =
+                                    new PointWidgetData(_pointWidgetS, _vector3, _parent, points);
+                                gameObjectDataList.Add(pointWidgetS);
+                            }
+                            else if (name == "PointWidgetM")
+                            {
+                                PointWidgetData pointWidgetM =
+                                    new PointWidgetData(_pointWidgetM, _vector3, _parent, points);
+                                gameObjectDataList.Add(pointWidgetM);
+                            }
+                            else if (name == "PointWidgetL")
+                            {
+                                PointWidgetData pointWidgetL =
+                                    new PointWidgetData(_pointWidgetL, _vector3, _parent, points);
+                                gameObjectDataList.Add(pointWidgetL);
+                            }
+                            else if (name == "PointWidgetXL")
+                            {
+                                PointWidgetData pointWidgetXl =
+                                    new PointWidgetData(_pointWidgetXl, _vector3, _parent, points);
+                                gameObjectDataList.Add(pointWidgetXl);
+                            }
                         }
                     }
                 }

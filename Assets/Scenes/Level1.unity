@@ -4290,11 +4290,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 946754964}
     m_Modifications:
-    - target: {fileID: -8590125479848610966, guid: b6c4b424c227e4a97ae341970abe8af1,
-        type: 3}
-      propertyPath: itemName
-      value: Chip2
-      objectReference: {fileID: 0}
     - target: {fileID: 2380596894273055646, guid: b6c4b424c227e4a97ae341970abe8af1,
         type: 3}
       propertyPath: m_Name
@@ -13100,28 +13095,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1335907617, guid: c639800023ff9058ea0eab066fd8b114, type: 3}
-      propertyPath: jumpForce
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1335907617, guid: c639800023ff9058ea0eab066fd8b114, type: 3}
-      propertyPath: liveNumber
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1335907617, guid: c639800023ff9058ea0eab066fd8b114, type: 3}
-      propertyPath: livePoints
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 1548934167, guid: c639800023ff9058ea0eab066fd8b114, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 13400000, guid: 155f12c88ff6d026aa9890a3339f46e5,
-        type: 2}
-    - target: {fileID: 1548934168, guid: c639800023ff9058ea0eab066fd8b114, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 13400000, guid: 155f12c88ff6d026aa9890a3339f46e5,
-        type: 2}
     - target: {fileID: 6129558820902416196, guid: c639800023ff9058ea0eab066fd8b114,
         type: 3}
       propertyPath: m_RootOrder

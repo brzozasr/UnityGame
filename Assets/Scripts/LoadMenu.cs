@@ -49,6 +49,7 @@ namespace DefaultNamespace
                     _sqlSaveScore.DeleteSave(saveId);
                 }
             }
+            dropdown.captionText.text = "Select a save...";
             
             dropdown.onValueChanged.AddListener(delegate { DropDownItemSelected(dropdown); });
         }

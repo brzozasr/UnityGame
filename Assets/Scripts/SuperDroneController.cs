@@ -32,7 +32,7 @@ namespace DefaultNamespace
             if (_isSuperCall == false)
             {
                 _isSuperCall = true;
-                var pos = transform.position;
+                var pos = transform.localPosition;
                 _posSuperX = pos.x;
                 _posSuperY = pos.y;
                 _posSuperZ = pos.z;
@@ -62,11 +62,11 @@ namespace DefaultNamespace
             if (_iteratorSuper >= _frameSuper)
             {
                 transform.Rotate(Vector3.up, 180.0f * Time.deltaTime);
-                var pos = transform.position;
+                var pos = transform.localPosition;
 
                 if (pos.y < _posSuperY + maxMoveY && _isSuperMoveUp)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition,
                         new Vector3(pos.x, _posSuperY + maxMoveY, pos.z),
                         moveSpeed * Time.deltaTime);
                     if (Math.Abs(pos.y - (_posSuperY + maxMoveY)) < 0.1f)
@@ -76,7 +76,7 @@ namespace DefaultNamespace
                 }
                 else
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition,
                         new Vector3(_posSuperX, _posSuperY, _posSuperZ),
                         moveSpeed * Time.deltaTime);
                     if (Math.Abs(_posSuperY - pos.y) < 0.1f)

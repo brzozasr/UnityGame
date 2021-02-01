@@ -95,6 +95,7 @@ namespace Spawner
             {
                 Debug.Log($"Load {SceneSaveIdToLoad.ToString()} id");
                 LoadGameObjects(SceneSaveIdToLoad, false);
+                SceneSaveIdToLoad = 0;
             }
             else
             {

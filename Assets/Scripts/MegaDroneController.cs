@@ -33,7 +33,7 @@ namespace DefaultNamespace
             if (_isMegaCall == false)
             {
                 _isMegaCall = true;
-                var pos = transform.position;
+                var pos = transform.localPosition;
                 _posMegaX = pos.x;
                 _posMegaY = pos.y;
                 _posMegaZ = pos.z;
@@ -75,11 +75,11 @@ namespace DefaultNamespace
             if (_iteratorMega >= _frameMega)
             {
                 transform.Rotate(Vector3.up, 180.0f * Time.deltaTime);
-                var pos = transform.position;
+                var pos = transform.localPosition;
 
                 if (_moveHorizontal == 0)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition,
                         new Vector3(pos.x, _posMegaY + maxMoveY, pos.z),
                         moveSpeed * Time.deltaTime);
                     if (Math.Abs(pos.y - (_posMegaY + maxMoveY)) < 0.1f)
@@ -89,7 +89,7 @@ namespace DefaultNamespace
                 }
                 else if (_moveHorizontal == 1)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition,
                         new Vector3(_destPosX ,pos.y, pos.z),
                         moveSpeed * Time.deltaTime);
                     if (Math.Abs(pos.x - _destPosX) <= 0.1f)
@@ -99,7 +99,7 @@ namespace DefaultNamespace
                 }
                 else
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition,
                         new Vector3(_posMegaX, _posMegaY, _posMegaZ),
                         moveSpeed * Time.deltaTime);
                     if (Math.Abs(_posMegaY - pos.y) < 0.1f && Math.Abs(_posMegaX - pos.x) < 0.1f)

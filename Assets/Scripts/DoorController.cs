@@ -50,10 +50,10 @@ namespace DefaultNamespace
                     {
                         DataStore.IsLevelOver = true;
 
-                        if (SceneManager.GetActiveScene().buildIndex == 1)
-                        {
-                            DataStore.RemoveItemsFromInventory("Chip2", requiredCompatibleChipNameCount);
-                        }
+                        // if (SceneManager.GetActiveScene().buildIndex == 1)
+                        // {
+                        //     DataStore.RemoveItemsFromInventory("Chip2", requiredCompatibleChipNameCount);
+                        // }
                     }
                 }
             }

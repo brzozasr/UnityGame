@@ -2,6 +2,24 @@
 
 ## NOTES: The technical assumptions of making the game were different and much easier, but the concept of making the game was completely changed. The game is written in Unity.
 
+## Screenshots
+
+![Screenshot1](Assets/Screenshots/Screenshot1.png?raw=true)
+
+![Screenshot1](Assets/Screenshots/Screenshot2.png?raw=true)
+
+![Screenshot1](Assets/Screenshots/Screenshot3.png?raw=true)
+
+
+## Download
+
+Download the zipped game [source code](https://www.dropbox.com/s/02gitsds9uz0vsv/UnityGame.zip?dl=0).
+
+Download the compiled game on platform:\
+[Windows](https://www.dropbox.com/s/36h6z037prkjkgh/Windows.zip?dl=0), \
+[MacOS](https://www.dropbox.com/s/ykbv8cmu33y1777/MacOS.tar.gz?dl=0), \
+[Linux](https://www.dropbox.com/s/t3m7xlh5gp155yu/Linux.tar.gz?dl=0).
+
 ## Story
 
 [Roguelikes](https://en.wikipedia.org/wiki/Roguelike) are one of the oldest

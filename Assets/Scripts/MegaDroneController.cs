@@ -206,5 +206,10 @@ namespace DefaultNamespace
                 _hitMegaCounter.enabled = false;
             }
         }
+        
+        public new Vector3 GetInitPosition()
+        {
+            return new Vector3(_posMegaX, _posMegaY, _posMegaZ);
+        }
     }
 }

@@ -171,5 +171,10 @@ namespace DefaultNamespace
                 _hitSuperCounter.enabled = false;
             }
         }
+        
+        public Vector3 GetInitPosition()
+        {
+            return new Vector3(_posSuperX, _posSuperY, _posSuperZ);
+        }
     }
 }

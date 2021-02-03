@@ -6,9 +6,9 @@
 
 ![Screenshot1](Assets/Screenshots/Screenshot1.png?raw=true)
 
-![Screenshot1](Assets/Screenshots/Screenshot2.png?raw=true)
+![Screenshot2](Assets/Screenshots/Screenshot2.png?raw=true)
 
-![Screenshot1](Assets/Screenshots/Screenshot3.png?raw=true)
+![Screenshot3](Assets/Screenshots/Screenshot3.png?raw=true)
 
 
 ## Download
